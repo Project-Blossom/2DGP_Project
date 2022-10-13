@@ -25,7 +25,7 @@ def handle_events():
 
 open_canvas(WIDTH, HEIGHT)
 
-character = load_image('Mario&items.png')
+character = load_image('SmallMario.png')
 
 running = True
 pose = 0
@@ -38,19 +38,20 @@ accel = 0
 while running:
     clear_canvas()
     if dir_x == 1 :
-        character.clip_draw(frame * 100, pose, 100, 100, x, y)
-        pose = 100
+        character.clip_draw(frame * 100 + 100, pose+80, 100, 75, x, y)
+        pose = 90
     elif dir_x == -1 :
-        character.clip_draw(frame * 100, pose, 100, 100, x, y)
+        character.clip_draw(frame * 100 + 1000, pose+412, 100, 75, x, y)
         pose = 0
     elif dir_x == 0 :
-        pose += 200
-        character.clip_draw(frame * 100, pose, 100, 100, x, y)
-        pose -= 200
+        pose += 90
+        character.clip_draw(0, 170, 100, 75, x, y)
+        pose -= 90
     update_canvas()
 
     handle_events()
-    frame = (frame + 1) % 4
+    delay(0.05)
+    frame = (frame + 1) % 3
     if x + 10 <= WIDTH  and x - 10 >= 0 + 20:
         x += dir_x * 10
     elif x + 10 > WIDTH:
