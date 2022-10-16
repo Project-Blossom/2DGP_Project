@@ -1,7 +1,7 @@
 from pico2d import *
 import game_framework
 import main as screen
-
+import item_state
 VELOCITY = 1 # 속도
 MASS = 1000 # 질량
 
@@ -39,8 +39,6 @@ class Mario:
             self.pose -= 92
 
     def screen_check(self): # 화면 밖으로 못나가게 하기
-        self.frame = (self.frame + 1) % 3
-        self.x += self.dir_x * 1
         if self.x > screen.WIDTH:
             self.x = screen.WIDTH
 
@@ -56,7 +54,9 @@ class Mario:
     def jump(self, j): # 점프 상태 체크
         self.isJump = j
 
-    def update(self): # 점프 관련
+    def update(self): # 이동 관련
+        self.frame = (self.frame + 1) % 3
+        self.x += self.dir_x * 1
         if self.isJump > 0:
 
             # if self.isJump == 2: # 이단 점프
@@ -77,6 +77,31 @@ class Mario:
                 self.isJump = 0
                 self.v = VELOCITY
 
+class Mushroom:
+    def __init__(self):
+        self.x = screen.WIDTH // 2
+        self.y = screen.HEIGHT - 20
+        self.image = load_image('Items.png')
+        self.dir_x = -0.6
+
+    def draw(self):
+        self.image.clip_draw(0, 0, 100, 60, self.x, self.y)
+
+    def update(self):
+        if self.y > 35:
+            self.y -= 1
+        if self.y <= 35:
+            self.x += self.dir_x
+
+    def screen_check(self):
+        if self.y < 35:
+            self.y = 35
+        if self.x < 0:
+            self.x = 0
+            self.dir_x = 0.6
+        elif self.x > screen.WIDTH:
+            self.x = screen.WIDTH
+            self.dir_x = -0.6
 
 def handle_events():
     global playing, mario
@@ -87,6 +112,8 @@ def handle_events():
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
+            elif event.key == SDLK_i:
+                game_framework.push_state(item_state)
             elif event.key == SDLK_RIGHT:
                 mario.dir_x += 1
             elif event.key == SDLK_LEFT:
@@ -107,24 +134,38 @@ def handle_events():
 
 playing = True
 mario = None
-
+spawnmush = 0
+mushroom = None
 
 def enter():
-    global mario, playing
+    global mario, playing, mushroom, spawnmush
     mario = Mario()
+    if(spawnmush > 0):
+        mushroom = Mushroom()
     playing = True
 
 def update():
     global mario
     mario.update()
     mario.screen_check()
+    if (spawnmush > 0):
+        mushroom.update()
+        mushroom.screen_check()
 
 
 
 def draw():
     clear_canvas()
     mario.draw()
+    if (spawnmush > 0):
+        mushroom.draw()
     update_canvas()
+
 def exit():
     quit()
 
+def pause():
+    pass
+
+def resume():
+    pass
