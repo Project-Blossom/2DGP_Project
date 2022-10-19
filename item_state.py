@@ -1,7 +1,7 @@
 from pico2d import *
 import game_framework
 import Mario
-import main as screen
+import maingame as screen
 
 image = None
 

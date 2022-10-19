@@ -1,6 +1,6 @@
 from pico2d import *
 import game_framework
-import main as screen
+import maingame as screen
 import item_state
 VELOCITY = 1 # 속도
 MASS = 1000 # 질량
@@ -12,7 +12,8 @@ class Tile:
 
 class Mario:
     def __init__(self): # 초기화
-        self.image = load_image('SmallMario.png')
+        self.smallform = load_image('SmallMario.png')
+        self.bigform = load_image('BigMario.png')
         self.dir_x = 0
         self.x, self.y = screen.WIDTH // 2, 35 # 초기 위치 (화면 하단 중앙)
         self.pose = 0
@@ -21,39 +22,58 @@ class Mario:
         self.v = VELOCITY # 속도
         self.m = MASS # 질량
         self.life = 1
-        self.state = None
+        self.state = 'mushroom'
 
     def draw(self): #그리기
         if self.dir_x == 1: # 오른쪽을 향할때
-            if self.isJump > 0:
+            if self.isJump > 0: # 점프할 때
                 if self.state == 'mushroom':
-                    self.image.clip_draw(600, 91, 100, 75, self.x, self.y)
+                    self.bigform.clip_draw(600, 91 + 50, 100, 110, self.x, self.y)
                 else:
-                    self.image.clip_draw(600, 91, 100, 75, self.x, self.y)
+                    self.smallform.clip_draw(600, 91, 100, 75, self.x, self.y)
             else:
-                self.image.clip_draw(self.frame * 100 + 100, self.pose + 91, 100, 75, self.x, self.y)
-            self.pose = -1
+                if self.state == 'mushroom':
+                    self.bigform.clip_draw(self.frame * 100 + 100, self.pose + 91 + 192, 100, 110, self.x, self.y)
+                else:
+                    self.smallform.clip_draw(self.frame * 100 + 100, self.pose + 91, 100, 75, self.x, self.y)
+            if self.state == 'mushroom':
+                self.pose = 0
+            else:
+                self.pose = -1
         elif self.dir_x == -1: # 왼쪽을 향할때
             if self.isJump > 0:
-                self.image.clip_draw(700, 335, 100, 75, self.x, self.y)
+                if self.state == 'mushroom':
+                    self.bigform.clip_draw(700, 335 + 222, 100, 110, self.x, self.y)
+                else:
+                    self.smallform.clip_draw(700, 335, 100, 75, self.x, self.y)
             else:
                 if self.state == 'mushroom':
-                    self.image = load_image('BigMario.png')
-                    self.image.clip_draw(self.frame * 100 + 1000, self.pose + 12, 100, 75, self.x, self.y)
+                    self.bigform.clip_draw(self.frame * 100 + 1000, self.pose + 12 + 222, 100, 110, self.x, self.y)
                 else:
-                    self.image.clip_draw(self.frame * 100 + 1000, self.pose + 12, 100, 75, self.x, self.y)
-            self.pose = 320
+                    self.smallform.clip_draw(self.frame * 100 + 1000, self.pose + 12, 100, 75, self.x, self.y)
+            if self.state == 'mushroom':
+                self.pose = 500
+            else:
+                self.pose = 320
         elif self.dir_x == 0: # 스탠딩
-            self.pose += 92
+            if self.state == 'mushroom':
+                self.pose += 92
+            else:
+                self.pose += 92
             if self.isJump > 0:
-                self.image.clip_draw(600, 91, 100, 75, self.x, self.y)
+                if self.state == 'mushroom':
+                    self.bigform.clip_draw(600, 91 + 50, 100, 110, self.x, self.y)
+                else:
+                    self.smallform.clip_draw(600, 91, 100, 75, self.x, self.y)
             else:
                 if self.state == 'mushroom':
-                    self.image = load_image('BigMario.png')
-                    self.image.clip_draw(0, self.pose, 100, 75, self.x, self.y)
+                    self.bigform.clip_draw(0, self.pose + 192, 100, 110, self.x, self.y)
                 else:
-                    self.image.clip_draw(0, self.pose, 100, 75, self.x, self.y)
-            self.pose -= 92
+                    self.smallform.clip_draw(0, self.pose, 100, 75, self.x, self.y)
+            if self.state == 'mushroom':
+                self.pose -= 92
+            else:
+                self.pose -= 92
 
     def screen_check(self): # 화면 밖으로 못나가게 하기
         if self.x > screen.WIDTH:
@@ -243,7 +263,6 @@ def get_item():
     if (collider(mario, star) == 1):
         mario.state = 'star'
 
-
 def enter():
     global mario, playing, mushroom, flower, star, tile
     tile = Tile()
@@ -264,7 +283,6 @@ def update():
     star.update()
     star.screen_check()
     get_item()
-
 
 def draw():
     clear_canvas()
