@@ -48,11 +48,11 @@ class Mario:
                     self.smallform.clip_draw(700, 335, 100, 75, self.x, self.y)
             else:
                 if self.state == 'mushroom':
-                    self.bigform.clip_draw(self.frame * 100 + 1000, self.pose + 12 + 222, 100, 110, self.x, self.y)
+                    self.bigform.clip_draw(self.frame * 100 + 1000, self.pose + 12 + 272, 100, 110, self.x, self.y)
                 else:
                     self.smallform.clip_draw(self.frame * 100 + 1000, self.pose + 12, 100, 75, self.x, self.y)
             if self.state == 'mushroom':
-                self.pose = 500
+                self.pose = 410
             else:
                 self.pose = 320
         elif self.dir_x == 0: # 스탠딩
@@ -250,6 +250,8 @@ star = None
 tile = None
 
 def collider(mario, item):
+    #if mario.x + 20 > item.x - 20
+
     pass
 
 def get_item():
