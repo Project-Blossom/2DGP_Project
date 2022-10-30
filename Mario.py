@@ -22,10 +22,11 @@ class Mario:
         self.v = VELOCITY # 속도
         self.m = MASS # 질량
         self.life = 1
-        self.state = 'mushroom'
+        self.state = None
+        self.rect = [(self.x - 20, self.y + 25), (self.x + 20, self.y + 25), (self.x - 20, self.y - 25) ,(self.x + 20, self.y - 25)]
 
     def draw(self): #그리기
-        if self.dir_x == 1: # 오른쪽을 향할때
+        if self.dir_x == 1: # 오른쪽을 향할 때
             if self.isJump > 0: # 점프할 때
                 if self.state == 'mushroom':
                     self.bigform.clip_draw(600, 91 + 50, 100, 110, self.x, self.y)
@@ -250,9 +251,10 @@ star = None
 tile = None
 
 def collider(mario, item):
-    #if mario.x + 20 > item.x - 20
-
+    if mario.x + 20 > item.x - 20 > mario.x - 20 and mario.y + 50 > item.y - 50 > mario.x - 50:
+        return 1
     pass
+
 
 def get_item():
     if (collider(mario, mushroom) == 1) and (mario.state != 'flower'):
