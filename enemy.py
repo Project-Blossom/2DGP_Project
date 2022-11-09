@@ -1,5 +1,16 @@
 from pico2d import *
 import maingame as screen
+import game_framework
+
+PIXEL_PER_METER = (10.0/0.3)
+MOVE_SPEED_KMPH = 15.0
+MOVE_SPEED_MPM = (MOVE_SPEED_KMPH * 1000.0 / 60.0)
+MOVE_SPEED_MPS = (MOVE_SPEED_MPM / 60.0)
+MOVE_SPEED_PPS = (MOVE_SPEED_MPS * PIXEL_PER_METER)
+
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 0.5 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
 
 class Goomba:
     def __init__(self):
@@ -9,7 +20,7 @@ class Goomba:
         self.frame = 0
 
     def draw(self): #그리기
-            self.image.clip_draw(self.frame * 80 , 780, 50, 50, self.x, self.y)
+            self.image.clip_draw(int(self.frame) * 64 + 67, 780, 64, 50, self.x, self.y)
 
     def screen_check(self): # 화면 밖으로 못나가게 하기
         if self.x > screen.WIDTH:
@@ -21,8 +32,8 @@ class Goomba:
             self.dir_x = 1
 
     def update(self): # 이동 관련
-        self.frame = (self.frame + 1) % 3
-        self.x += self.dir_x * 1
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
+        self.x += self.dir_x * MOVE_SPEED_PPS * game_framework.frame_time
 
 class KoopaTroopa:
     def __init__(self):

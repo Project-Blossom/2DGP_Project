@@ -7,11 +7,36 @@ from Enemy import *
 
 VELOCITY = 1 # 속도
 MASS = 1000 # 질량
-class Tile:
-    def __init__(self):
-        self.image = load_image('Tiles.png')
-    def draw(self):
-        self.draw()
+
+PIXEL_PER_METER = (10.0/0.3)
+MOVE_SPEED_KMPH = 30.0
+MOVE_SPEED_MPM = (MOVE_SPEED_KMPH * 1000.0 / 60.0)
+MOVE_SPEED_MPS = (MOVE_SPEED_MPM / 60.0)
+MOVE_SPEED_PPS = (MOVE_SPEED_MPS * PIXEL_PER_METER)
+
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 0.5 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
+
+RD, LD, RU, LU, TIMER, SPACE = range(6)
+event_name = ['RD', 'LD', 'RU', 'LU', 'TIMER', 'SPACE']
+
+key_event_table = {
+    (SDL_KEYDOWN, SDLK_SPACE): SPACE,
+    (SDL_KEYDOWN, SDLK_RIGHT): RD,
+    (SDL_KEYDOWN, SDLK_LEFT): LD,
+    (SDL_KEYUP, SDLK_RIGHT): RU,
+    (SDL_KEYUP, SDLK_LEFT): LU
+}
+PIXEL_PER_METER = (10.0/0.3)
+RUN_SPEED_KMPH = 20.0
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
 
 class Mario:
     def __init__(self): # 초기화
@@ -37,9 +62,9 @@ class Mario:
                     self.smallform.clip_draw(600, 91, 100, 75, self.x, self.y)
             else:
                 if self.state == 'mushroom':
-                    self.bigform.clip_draw(self.frame * 100 + 100, self.pose + 91 + 192, 100, 110, self.x, self.y)
+                    self.bigform.clip_draw(int(self.frame) * 100 + 100, self.pose + 91 + 192, 100, 110, self.x, self.y)
                 else:
-                    self.smallform.clip_draw(self.frame * 100 + 100, self.pose + 91, 100, 75, self.x, self.y)
+                    self.smallform.clip_draw(int(self.frame) * 100 + 100, self.pose + 91, 100, 75, self.x, self.y)
             if self.state == 'mushroom':
                 self.pose = 0
             else:
@@ -52,9 +77,9 @@ class Mario:
                     self.smallform.clip_draw(700, 335, 100, 75, self.x, self.y)
             else:
                 if self.state == 'mushroom':
-                    self.bigform.clip_draw(self.frame * 100 + 1000, self.pose + 12 + 272, 100, 110, self.x, self.y)
+                    self.bigform.clip_draw(int(self.frame) * 100 + 1000, self.pose + 12 + 272, 100, 110, self.x, self.y)
                 else:
-                    self.smallform.clip_draw(self.frame * 100 + 1000, self.pose + 12, 100, 75, self.x, self.y)
+                    self.smallform.clip_draw(int(self.frame) * 100 + 1000, self.pose + 12, 100, 75, self.x, self.y)
             if self.state == 'mushroom':
                 self.pose = 410
             else:
@@ -97,8 +122,8 @@ class Mario:
 
     def update(self): # 이동 관련
         get_item()
-        self.frame = (self.frame + 1) % 3
-        self.x += self.dir_x * 1
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        self.x += self.dir_x * MOVE_SPEED_PPS * game_framework.frame_time
         if self.isJump > 0:
 
             # if self.isJump == 2: # 이단 점프
@@ -156,7 +181,7 @@ spawnflower = 0
 flower = None
 spawnstar = 0
 star = None
-tile = None
+
 
 def collider(mario, item):
     if mario.x + 20 > item.x - 20 > mario.x - 20 and mario.y + 50 > item.y - 20 > mario.x - 50:
@@ -176,7 +201,6 @@ def get_item():
 
 def enter():
     global mario, playing, mushroom, flower, star, tile
-    tile = Tile()
     mario = Mario()
     mushroom = Goomba()
     flower = Fire_Flower()
