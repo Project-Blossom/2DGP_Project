@@ -1,5 +1,5 @@
 from pico2d import *
-import maingame as screen
+# import maingame as screen
 import game_framework
 
 PIXEL_PER_METER = (10.0/0.3)
@@ -16,15 +16,15 @@ class Goomba:
     def __init__(self):
         self.image = load_image("Monsters.png")
         self.dir_x = 1
-        self.x, self.y = screen.WIDTH // 2, 35 + 200  # 초기 위치 (화면 하단 중앙)
+        self.x, self.y = 1400 // 2, 35 + 200  # 초기 위치 (화면 하단 중앙)
         self.frame = 0
 
     def draw(self): #그리기
             self.image.clip_draw(int(self.frame) * 64 + 67, 780, 64, 50, self.x, self.y)
 
     def screen_check(self): # 화면 밖으로 못나가게 하기
-        if self.x > screen.WIDTH:
-            self.x = screen.WIDTH
+        if self.x > 1400:
+            self.x = 1400
             self.dir_x = -1
 
         elif self.x < 0:
@@ -39,7 +39,7 @@ class KoopaTroopa:
     def __init__(self):
         self.image = load_image("Monsters.png")
         self.dir_x = 0
-        self.x, self.y = screen.WIDTH // 2, 35 + 200  # 초기 위치 (화면 하단 중앙)
+        self.x, self.y = 1400 // 2, 35 + 200  # 초기 위치 (화면 하단 중앙)
         self.pose = 0
         self.frame = 0
 
@@ -55,8 +55,8 @@ class KoopaTroopa:
             self.pose -= 92
 
     def screen_check(self): # 화면 밖으로 못나가게 하기
-        if self.x > screen.WIDTH:
-            self.x = screen.WIDTH
+        if self.x > 1400:
+            self.x = 1400
             self.dir_x = -1
 
         elif self.x < 0:

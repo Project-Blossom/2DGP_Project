@@ -1,12 +1,13 @@
 from pico2d import *
-import maingame as screen
+# import maingame as screen
 
 VELOCITY = 1  # 속도
 MASS = 1000  # 질량
+
 class Mushroom:
     def __init__(self):
-        self.x = screen.WIDTH // 2 - 300
-        self.y = screen.HEIGHT - 20
+        self.x = 1400 // 2 - 300
+        self.y = 700 - 20
         self.image = load_image('Items.png')
         self.dir_x = -0.6
 
@@ -25,14 +26,14 @@ class Mushroom:
         if self.x < 0:
             self.x = 0
             self.dir_x = 0.6
-        elif self.x > screen.WIDTH:
-            self.x = screen.WIDTH
+        elif self.x > 1400:
+            self.x = 1400
             self.dir_x = -0.6
 
 class Fire_Flower:
     def __init__(self):
-        self.x = screen.WIDTH // 2
-        self.y = screen.HEIGHT - 20
+        self.x = 1400 // 2
+        self.y = 700 - 20
         self.image = load_image('Items.png')
         self.dir_x = -0.6
 
@@ -51,7 +52,7 @@ class Star:
     def __init__(self):
         self.image = load_image('Items.png')
         self.dir_x = 0.7
-        self.x, self.y = screen.WIDTH // 2 + 300, screen.HEIGHT  # 초기 위치 (화면 하단 중앙)
+        self.x, self.y = 1400 // 2 + 300, 700  # 초기 위치 (화면 하단 중앙)
         self.isJump = 0  # 점프 확인
         self.v = VELOCITY  # 속도
         self.m = MASS  # 질량
@@ -85,8 +86,8 @@ class Star:
             self.v = VELOCITY
 
     def screen_check(self):
-        if self.x > screen.WIDTH:
-            self.x = screen.WIDTH
+        if self.x > 1400:
+            self.x = 1400
             self.dir_x = -0.8
 
         elif self.x < 0:
@@ -96,6 +97,6 @@ class Star:
         elif self.y < 35:
             self.y = 35
 
-        elif self.y > screen.HEIGHT:
-            self.y = screen.HEIGHT - 10
+        elif self.y > 700:
+            self.y = 700 - 10
 

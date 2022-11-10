@@ -1,5 +1,6 @@
 import time
 frame_time = 0.0
+
 class GameState:
     def __init__(self, state):
         self.enter = state.enter
@@ -9,8 +10,6 @@ class GameState:
         self.handle_events = state.handle_events
         self.update = state.update
         self.draw = state.draw
-
-
 
 class TestGameState:
 
@@ -63,8 +62,6 @@ def push_state(state):
     stack.append(state)
     state.enter()
 
-
-
 def pop_state():
     global stack
     if (len(stack) > 0):
@@ -109,7 +106,5 @@ def test_game_framework():
     start_state = TestGameState('StartState')
     run(start_state)
 
-
-
-if __name__ == '__main__':
-    test_game_framework()
+    if __name__ == '__main__':
+        test_game_framework()

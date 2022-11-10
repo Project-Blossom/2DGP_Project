@@ -1,9 +1,5 @@
 from pico2d import *
 import game_framework
-import maingame as screen
-import item_state
-from Items import *
-from Enemy import *
 
 VELOCITY = 1 # 속도
 MASS = 1000 # 질량
@@ -38,12 +34,84 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
+class IDLE:
+    @staticmethod
+    def enter(self,event):
+        # print('ENTER IDLE')
+        self.dir = 0
+        self.timer = 1000
+
+    @staticmethod
+    def exit(self, event):
+        pass
+        # print('EXIT IDLE')
+
+    @staticmethod
+    def do(self):
+        self.frame = (self.frame + 1) % 8
+        self.timer -= 1
+        if self.timer == 0:
+            self.add_event(TIMER)
+
+    @staticmethod
+    def draw(self):
+        if self.face_dir == 1:
+            self.image.clip_draw(self.frame * 100, 300, 100, 100, self.x, self.y)
+        else:
+            self.image.clip_draw(self.frame * 100, 200, 100, 100, self.x, self.y)
+
+class RUN:
+    def enter(self, event):
+        # print('ENTER RUN')
+        if event == RD:
+            self.dir += 1
+        elif event == LD:
+            self.dir -= 1
+        elif event == RU:
+            self.dir -= 1
+        elif event == LU:
+            self.dir += 1
+
+    def exit(self, event):
+        # print('EXIT RUN')
+        self.face_dir = self.dir
+
+
+    def do(self):
+        self.frame = (self.frame + 1) % 8
+        self.x += self.dir
+        self.x = clamp(0, self.x, 1600)
+
+    def draw(self):
+        if self.dir == -1:
+            self.image.clip_draw(self.frame*100, 0, 100, 100, self.x, self.y)
+        elif self.dir == 1:
+            self.image.clip_draw(self.frame*100, 100, 100, 100, self.x, self.y)
+
+class JUMP:
+    def enter(self):
+        pass
+
+    def exit(self):
+        pass
+
+    def do(self):
+        pass
+
+    def draw(self):
+        pass
+
+next_state = {
+    IDLE: {RU: RUN, LU: RUN, RD: RUN, LD: RUN},
+    RUN: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE}
+}
+
 class Mario:
     def __init__(self): # 초기화
         self.smallform = load_image('SmallMario.png')
         self.bigform = load_image('BigMario.png')
-        self.dir_x = 0
-        self.x, self.y = screen.WIDTH // 2, 35 # 초기 위치 (화면 하단 중앙)
+        self.dir, self.face_dir = 0, 1
+        self.x, self.y = 1400 // 2, 35 # 초기 위치 (화면 하단 중앙)
         self.pose = 0
         self.frame = 0
         self.isJump = 0 # 점프 확인
@@ -54,7 +122,7 @@ class Mario:
         self.rect = [(self.x - 20, self.y + 25), (self.x + 20, self.y + 25), (self.x - 20, self.y - 25) ,(self.x + 20, self.y - 25)]
 
     def draw(self): #그리기
-        if self.dir_x == 1: # 오른쪽을 향할 때
+        if self.dir == 1: # 오른쪽을 향할 때
             if self.isJump > 0: # 점프할 때
                 if self.state == 'mushroom':
                     self.bigform.clip_draw(600, 91 + 50, 100, 110, self.x, self.y)
@@ -69,7 +137,7 @@ class Mario:
                 self.pose = 0
             else:
                 self.pose = -1
-        elif self.dir_x == -1: # 왼쪽을 향할때
+        elif self.dir == -1: # 왼쪽을 향할때
             if self.isJump > 0:
                 if self.state == 'mushroom':
                     self.bigform.clip_draw(700, 335 + 222, 100, 110, self.x, self.y)
@@ -84,7 +152,7 @@ class Mario:
                 self.pose = 410
             else:
                 self.pose = 320
-        elif self.dir_x == 0: # 스탠딩
+        elif self.dir == 0: # 스탠딩
             if self.state == 'mushroom':
                 self.pose += 92
             else:
@@ -105,8 +173,8 @@ class Mario:
                 self.pose -= 92
 
     def screen_check(self): # 화면 밖으로 못나가게 하기
-        if self.x > screen.WIDTH:
-            self.x = screen.WIDTH
+        if self.x > 1400:
+            self.x = 1400
 
         elif self.x < 0:
             self.x = 0
@@ -114,16 +182,15 @@ class Mario:
         elif self.y < 35:
             self.y = 35
 
-        elif self.y > screen.HEIGHT:
-            self.y = screen.HEIGHT -10
+        elif self.y > 700:
+            self.y = 700 -10
 
     def jump(self, j): # 점프 상태 체크
         self.isJump = j
 
     def update(self): # 이동 관련
-        get_item()
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
-        self.x += self.dir_x * MOVE_SPEED_PPS * game_framework.frame_time
+        self.x += self.dir * MOVE_SPEED_PPS * game_framework.frame_time
         if self.isJump > 0:
 
             # if self.isJump == 2: # 이단 점프
@@ -144,94 +211,28 @@ class Mario:
                 self.isJump = 0
                 self.v = VELOCITY
 
-def handle_events():
-    global playing, mario
-    events = get_events()
-    for event in events:
-        if event.type == SDL_QUIT:
-            game_framework.quit()
-        elif event.type == SDL_KEYDOWN:
-            if event.key == SDLK_ESCAPE:
+    def handle_events(self, event):
+        events = get_events()
+        for event in events:
+            if event.type == SDL_QUIT:
                 game_framework.quit()
-            elif event.key == SDLK_i:
-                game_framework.push_state(item_state)
-            elif event.key == SDLK_RIGHT:
-                mario.dir_x += 1
-            elif event.key == SDLK_LEFT:
-                mario.dir_x -= 1
-            elif event.key == SDLK_SPACE:
-                if mario.isJump == 0:
-                    mario.jump(1)
-                elif mario.isJump == 1:
-                    mario.jump(2)
-        elif event.type == SDL_KEYUP:
-            if event.key == SDLK_RIGHT:
-                mario.dir_x -= 1
-            elif event.key == SDLK_LEFT:
-                mario.dir_x += 1
-            # elif event.key == SDLK_SPACE:
-            #     if mario.isJump == 1:
-            #         mario.jump(0)
-
-playing = True
-mario = None
-spawnmush = 0
-mushroom = None
-spawnflower = 0
-flower = None
-spawnstar = 0
-star = None
-
-
-def collider(mario, item):
-    if mario.x + 20 > item.x - 20 > mario.x - 20 and mario.y + 50 > item.y - 20 > mario.x - 50:
-        return 1
-    pass
-
-def get_item():
-    if (collider(mario, mushroom) == 1) and (mario.state != 'flower'):
-        mario.state = 'mushroom'
-        game_framework.quit()
-        mario.life = 2
-    if (collider(mario, flower) == 1):
-        mario.state = 'flower'
-        mario.life = 3
-    if (collider(mario, star) == 1):
-        mario.state = 'star'
-
-def enter():
-    global mario, playing, mushroom, flower, star, tile
-    mario = Mario()
-    mushroom = Goomba()
-    flower = Fire_Flower()
-    star = Star()
-    playing = True
-
-def update():
-    global mario
-    mario.update()
-    mario.screen_check()
-    mushroom.update()
-    mushroom.screen_check()
-    flower.update()
-    flower.screen_check()
-    star.update()
-    star.screen_check()
-    get_item()
-
-def draw():
-    clear_canvas()
-    mario.draw()
-    mushroom.draw()
-    flower.draw()
-    star.draw()
-    update_canvas()
-
-def exit():
-    quit()
-
-def pause():
-    pass
-
-def resume():
-    pass
+            elif event.type == SDL_KEYDOWN:
+                if event.key == SDLK_ESCAPE:
+                    game_framework.quit()
+                elif event.key == SDLK_RIGHT:
+                    self.dir += 1
+                elif event.key == SDLK_LEFT:
+                    self.dir -= 1
+                elif event.key == SDLK_SPACE:
+                    if self.isJump == 0:
+                        self.jump(1)
+                    elif self.isJump == 1:
+                        self.jump(2)
+            elif event.type == SDL_KEYUP:
+                if event.key == SDLK_RIGHT:
+                    self.dir -= 1
+                elif event.key == SDLK_LEFT:
+                    self.dir += 1
+                # elif event.key == SDLK_SPACE:
+                #     if mario.isJump == 1:
+                #         mario.jump(0)
