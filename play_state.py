@@ -12,14 +12,24 @@ enemy = []
 items = []
 back = None
 
+def handle_events():
+    events = get_events()
+    for event in events:
+        if event.type == SDL_QUIT:
+            game_framework.quit()
+        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
+            game_framework.quit()
+        else:
+            mario.handle_events(event)
+
 # 초기화
 def enter():
     global mario, items, enemy, back
     mario = Mario()
     items = [Mushroom(), Fire_Flower(), Star()]
     enemy = [Goomba(), KoopaTroopa()]
-    back = stage1()
-    game_world.add_object(back, 0)
+    # back = stage1()
+    # game_world.add_object(back, 0)
     game_world.add_object(mario, 1)
     for item in items:
         game_world.add_object(item, 1)
@@ -48,16 +58,6 @@ def pause():
 
 def resume():
     pass
-
-def handle_events():
-    events = get_events()
-    for event in events:
-        if event.type == SDL_QUIT:
-            game_framework.quit()
-        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
-            game_framework.quit()
-        else:
-            mario.handle_events(event)
 
 def collide(a,b):
     la, ba, ra, ta = a.get_bb()

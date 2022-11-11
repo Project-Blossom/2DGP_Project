@@ -2,10 +2,14 @@ from pico2d import *
 
 class stage1:
     def __init__(self):
-        self.x = 1400 // 2
-        self.y = 700 // 2
-        self.image = load_image('1stage.png')
-
+        self.image = load_image('11stage.png')
+        self.image.clip_image(*screen_scale())
 
     def draw(self):
-        self.image.draw()
+        self.image.draw(700, 350)
+
+    def update(self):
+        pass
+
+def screen_scale():
+    return 0,0,1400,700
