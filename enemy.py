@@ -22,16 +22,8 @@ class Goomba:
     def draw(self): #그리기
             self.image.clip_draw(int(self.frame) * 64 + 67, 780, 64, 50, self.x, self.y)
 
-    def screen_check(self): # 화면 밖으로 못나가게 하기
-        if self.x > 1400:
-            self.x = 1400
-            self.dir_x = -1
-
-        elif self.x < 0:
-            self.x = 0
-            self.dir_x = 1
-
     def update(self): # 이동 관련
+        screen_check(self)
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
         self.x += self.dir_x * MOVE_SPEED_PPS * game_framework.frame_time
 
@@ -54,15 +46,22 @@ class KoopaTroopa:
             self.image.clip_draw(0, self.pose, 100, 75, self.x, self.y)
             self.pose -= 92
 
-    def screen_check(self): # 화면 밖으로 못나가게 하기
-        if self.x > 1400:
-            self.x = 1400
-            self.dir_x = -1
-
-        elif self.x < 0:
-            self.x = 0
-            self.dir_x = 1
-
     def update(self): # 이동 관련
+        screen_check(self)
         self.frame = (self.frame + 1) % 2
         self.x += self.dir_x * 1
+
+def screen_check(obj):
+    if obj.x > 1400:
+        obj.x = 1400
+        obj.dir_x = -obj.dir_x
+
+    elif obj.x < 0:
+        obj.x = 0
+        obj.dir_x = -obj.dir_x
+
+    elif obj.y < 35:
+        obj.y = 35
+
+    elif obj.y > 700:
+        obj.y = 700 - 10

@@ -12,23 +12,15 @@ class Mushroom:
         self.dir_x = -0.6
 
     def draw(self):
-        self.image.clip_draw(0, 0, 100, 60, self.x, self.y)
+        self.image.clip_draw(0, 0, 80, 60, self.x, self.y)
+        draw_rectangle(*get_bb(self))
 
     def update(self):
-        if self.y > 35:
+        screen_check(self)
+        if self.y-30 > 0:
             self.y -= 1
-        if self.y <= 35:
+        if self.y-30 <= 0:
             self.x += self.dir_x
-
-    def screen_check(self):
-        if self.y < 35:
-            self.y = 35
-        if self.x < 0:
-            self.x = 0
-            self.dir_x = 0.6
-        elif self.x > 1400:
-            self.x = 1400
-            self.dir_x = -0.6
 
 class Fire_Flower:
     def __init__(self):
@@ -39,14 +31,13 @@ class Fire_Flower:
 
     def draw(self):
         self.image.clip_draw(190, 0, 100, 60, self.x, self.y)
+        draw_rectangle(*get_bb(self))
 
     def update(self):
-        if self.y > 35:
+        screen_check(self)
+        if self.y-30 > 0:
             self.y -= 1
 
-    def screen_check(self):
-        if self.y < 35:
-            self.y = 35
 
 class Star:
     def __init__(self):
@@ -58,10 +49,12 @@ class Star:
         self.m = MASS  # 질량
 
     def draw(self):
-        self.image.clip_draw(400, 0, 100, 60, self.x, self.y)
+        self.image.clip_draw(395, 0, 110, 60, self.x, self.y)
+        draw_rectangle(*get_bb(self))
 
     def update(self):
-        if self.y > 35:
+        screen_check(self)
+        if self.y-30 > 0:
             self.x += self.dir_x * 1
             if self.isJump == 0:
                 self.y -= 1
@@ -80,23 +73,27 @@ class Star:
 
             self.v -= 0.01  # 속도 줄이기
 
-        if self.y <= 35:  # 바닥에 닿았을때 변수 리셋
-            self.y = 35
+        if self.y-30 <= 0:  # 바닥에 닿았을때 변수 리셋
+            self.y = 30
             self.isJump = 1
             self.v = VELOCITY
 
-    def screen_check(self):
-        if self.x > 1400:
-            self.x = 1400
-            self.dir_x = -0.8
 
-        elif self.x < 0:
-            self.x = 0
-            self.dir_x = 0.8
+def screen_check(obj):
+    if obj.x > 1400:
+        obj.x = 1400
+        obj.dir_x = -obj.dir_x
 
-        elif self.y < 35:
-            self.y = 35
+    elif obj.x < 0:
+        obj.x = 0
+        obj.dir_x = -obj.dir_x
 
-        elif self.y > 700:
-            self.y = 700 - 10
+    elif obj.y < 0:
+        obj.y = 0
+
+    elif obj.y > 700:
+        obj.y = 700 - 10
+
+def get_bb(obj):
+    return obj.x-25, obj.y-30, obj.x+25, obj.y+20
 

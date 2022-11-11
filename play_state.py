@@ -2,6 +2,7 @@ from pico2d import *
 import game_framework
 import game_world
 
+from Background import stage1
 from Items import Mushroom, Fire_Flower, Star
 from Mario import Mario
 from Enemy import Goomba, KoopaTroopa
@@ -9,13 +10,16 @@ from Enemy import Goomba, KoopaTroopa
 mario = None
 enemy = []
 items = []
+back = None
 
 # 초기화
 def enter():
-    global mario, items, enemy
+    global mario, items, enemy, back
     mario = Mario()
     items = [Mushroom(), Fire_Flower(), Star()]
     enemy = [Goomba(), KoopaTroopa()]
+    back = stage1()
+    game_world.add_object(back, 0)
     game_world.add_object(mario, 1)
     for item in items:
         game_world.add_object(item, 1)

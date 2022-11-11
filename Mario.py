@@ -197,9 +197,9 @@ class Mario:
             #     self.v = VELOCITY
 
             # 역학공식 계산 (F). F = 0.5 * mass * velocity^2.
-            if self.v > 0: # 속도가 0보다 클때는 위로 올라감
+            if self.v > 0: # 속도가 0보다 클 때는 위로 올라감
                 F = -(0.005 * self.m * (self.v **2))
-            else: # 속도가 0보다 작을때는 아래로 내려감
+            else: # 속도가 0보다 작을 때는 아래로 내려감
                 F = (0.005 * self.m * (self.v **2))
 
             self.y -= round(F) # 좌표 반영하기
