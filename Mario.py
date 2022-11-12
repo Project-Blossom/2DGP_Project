@@ -51,10 +51,10 @@ class IDLE:
 
     @staticmethod
     def draw(self):
-        if self.face_dir == 1:
-            self.image.clip_draw(self.frame * 100, 300, 100, 100, self.x, self.y)
-        else:
-            self.image.clip_draw(self.frame * 100, 200, 100, 100, self.x, self.y)
+        if self.dir == 0:
+            self.pose += 92
+            self.image.clip_draw(0, self.pose, 100, 75, self.x, self.y)
+            self.pose -= 92
 
 class RUN:
     def enter(self, event):
@@ -80,16 +80,21 @@ class RUN:
 
     def draw(self):
         if self.dir == -1:
-            self.image.clip_draw(self.frame*100, 0, 100, 100, self.x, self.y)
+            self.image.clip_draw(int(self.frame) * 100 + 1000, self.pose + 12, 100, 75, self.x, self.y)
+            self.pose = 320
         elif self.dir == 1:
-            self.image.clip_draw(self.frame*100, 100, 100, 100, self.x, self.y)
-
+            self.image.clip_draw(int(self.frame) * 100 + 100, self.pose + 91, 100, 75, self.x, self.y)
+            self.pose = -1
 class JUMP:
-    def enter(self):
+    def enter(self, event):
         print('JUMP!')
+        if self.isJump == 0:
+            self.jump(1)
+        elif self.isJump == 1:
+            self.jump(2)
         pass
 
-    def exit(self):
+    def exit(self,event):
         pass
 
     def do(self):
@@ -108,18 +113,24 @@ class JUMP:
 
             self.v -= 0.009 # 속도 줄이기
 
-            if self.y < 35: # 바닥에 닿았을때 변수 리셋
-                self.y = 35
+            if self.y-20 < 100: # 바닥에 닿았을때 변수 리셋
+                self.y = 120
                 self.isJump = 0
                 self.v = VELOCITY
         pass
 
     def draw(self):
+        if self.dir == 1: # 오른쪽을 향할 때
+            self.image.clip_draw(600, 91, 100, 75, self.x, self.y)
+        elif self.dir == -1: # 왼쪽을 향할때
+            self.image.clip_draw(700, 335, 100, 75, self.x, self.y)
+        elif self.dir == 0:  # 스탠딩
+            self.image.clip_draw(600, 91, 100, 75, self.x, self.y)
         pass
 
 next_state = {
     IDLE: {RU: RUN, LU: RUN, RD: RUN, LD: RUN},
-    RUN: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE}
+    RUN: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE},
 }
 
 class Mario:
@@ -127,7 +138,7 @@ class Mario:
         self.image = load_image('SmallMario.png')
         # self.bigform = load_image('BigMario.png')
         self.dir, self.face_dir = 0, 1
-        self.x, self.y = 1400 // 2, 35 # 초기 위치 (화면 하단 중앙)
+        self.x, self.y = 1400 // 2, 25 + 100 # 초기 위치 (화면 하단 중앙)
         self.pose = 0
         self.frame = 0
         self.isJump = 0 # 점프 확인
@@ -141,55 +152,50 @@ class Mario:
         self.cur_state.enter(self, None)
 
     def draw(self): #그리기
-        if self.dir == 1: # 오른쪽을 향할 때
-            if self.isJump > 0: # 점프할 때
-                # if self.state == 'mushroom':
-                #     self.bigform.clip_draw(600, 91 + 50, 100, 110, self.x, self.y)
-                # else:
-                self.image.clip_draw(600, 91, 100, 75, self.x, self.y)
-            else:
-                # if self.state == 'mushroom':
-                #     self.bigform.clip_draw(int(self.frame) * 100 + 100, self.pose + 91 + 192, 100, 110, self.x, self.y)
-                # else:
-                self.image.clip_draw(int(self.frame) * 100 + 100, self.pose + 91, 100, 75, self.x, self.y)
-            # if self.state == 'mushroom':
-            #     self.pose = 0
-            # else:
-            self.pose = -1
-        elif self.dir == -1: # 왼쪽을 향할때
-            if self.isJump > 0:
-            #     if self.state == 'mushroom':
-            #         self.bigform.clip_draw(700, 335 + 222, 100, 110, self.x, self.y)
-            #     else:
-                self.image.clip_draw(700, 335, 100, 75, self.x, self.y)
-            else:
-                # if self.state == 'mushroom':
-                #     self.bigform.clip_draw(int(self.frame) * 100 + 1000, self.pose + 12 + 272, 100, 110, self.x, self.y)
-                # else:
-                self.image.clip_draw(int(self.frame) * 100 + 1000, self.pose + 12, 100, 75, self.x, self.y)
-            # if self.state == 'mushroom':
-            #     self.pose = 410
-            # else:
-            self.pose = 320
-        elif self.dir == 0: # 스탠딩
-            # if self.state == 'mushroom':
-            #     self.pose += 92
-            # else:
-            self.pose += 92
-            if self.isJump > 0:
-                # if self.state == 'mushroom':
-                #     self.bigform.clip_draw(600, 91 + 50, 100, 110, self.x, self.y)
-                # else:
-                self.image.clip_draw(600, 91, 100, 75, self.x, self.y)
-            else:
-                # if self.state == 'mushroom':
-                #     self.bigform.clip_draw(0, self.pose + 192, 100, 110, self.x, self.y)
-                # else:
-                self.image.clip_draw(0, self.pose, 100, 75, self.x, self.y)
-            # if self.state == 'mushroom':
-            #     self.pose -= 92
-            # else:
-            self.pose -= 92
+        self.cur_state.draw(self)
+        # if self.dir == 1: # 오른쪽을 향할 때
+        #     if self.isJump > 0: # 점프할 때
+        #         self.image.clip_draw(600, 91, 100, 75, self.x, self.y)
+        #     else:
+        #         # if self.state == 'mushroom':
+        #         #     self.bigform.clip_draw(int(self.frame) * 100 + 100, self.pose + 91 + 192, 100, 110, self.x, self.y)
+        #         # else:
+        #         self.image.clip_draw(int(self.frame) * 100 + 100, self.pose + 91, 100, 75, self.x, self.y)
+        #     # if self.state == 'mushroom':
+        #     #     self.pose = 0
+        #     # else:
+        #     self.pose = -1
+        # elif self.dir == -1: # 왼쪽을 향할때
+        #     if self.isJump > 0:
+        #         self.image.clip_draw(700, 335, 100, 75, self.x, self.y)
+        #     else:
+        #         # if self.state == 'mushroom':
+        #         #     self.bigform.clip_draw(int(self.frame) * 100 + 1000, self.pose + 12 + 272, 100, 110, self.x, self.y)
+        #         # else:
+        #         self.image.clip_draw(int(self.frame) * 100 + 1000, self.pose + 12, 100, 75, self.x, self.y)
+        #     # if self.state == 'mushroom':
+        #     #     self.pose = 410
+        #     # else:
+        #     self.pose = 320
+        # elif self.dir == 0: # 스탠딩
+        #     # if self.state == 'mushroom':
+        #     #     self.pose += 92
+        #     # else:
+        #     self.pose += 92
+        #     if self.isJump > 0:
+        #         # if self.state == 'mushroom':
+        #         #     self.bigform.clip_draw(600, 91 + 50, 100, 110, self.x, self.y)
+        #         # else:
+        #         self.image.clip_draw(600, 91, 100, 75, self.x, self.y)
+        #     else:
+        #         # if self.state == 'mushroom':
+        #         #     self.bigform.clip_draw(0, self.pose + 192, 100, 110, self.x, self.y)
+        #         # else:
+        #         self.image.clip_draw(0, self.pose, 100, 75, self.x, self.y)
+        #     # if self.state == 'mushroom':
+        #     #     self.pose -= 92
+        #     # else:
+        #     self.pose -= 92
 
     # def screen_check(self): # 화면 밖으로 못나가게 하기
     #     if self.x > 1400:
@@ -271,6 +277,10 @@ class Mario:
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
+        if event.type == SDL_KEYDOWN:
+            if event.key == SDLK_SPACE:
+                JUMP.enter(self,event)
+
 
 
 

@@ -28,8 +28,8 @@ def enter():
     mario = Mario()
     items = [Mushroom(), Fire_Flower(), Star()]
     enemy = [Goomba(), KoopaTroopa()]
-    # back = stage1()
-    # game_world.add_object(back, 0)
+    back = stage1()
+    game_world.add_object(back, 0)
     game_world.add_object(mario, 1)
     for item in items:
         game_world.add_object(item, 1)

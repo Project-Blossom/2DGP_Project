@@ -17,9 +17,9 @@ class Mushroom:
 
     def update(self):
         screen_check(self)
-        if self.y-30 > 0:
+        if self.y-20 > 100:
             self.y -= 1
-        if self.y-30 <= 0:
+        if self.y-20 <= 100:
             self.x += self.dir_x
 
 class Fire_Flower:
@@ -35,7 +35,7 @@ class Fire_Flower:
 
     def update(self):
         screen_check(self)
-        if self.y-30 > 0:
+        if self.y-20 > 100:
             self.y -= 1
 
 
@@ -54,7 +54,7 @@ class Star:
 
     def update(self):
         screen_check(self)
-        if self.y-30 > 0:
+        if self.y-20 > 100:
             self.x += self.dir_x * 1
             if self.isJump == 0:
                 self.y -= 1
@@ -73,8 +73,8 @@ class Star:
 
             self.v -= 0.01  # 속도 줄이기
 
-        if self.y-30 <= 0:  # 바닥에 닿았을때 변수 리셋
-            self.y = 30
+        if self.y-20 <= 100:  # 바닥에 닿았을때 변수 리셋
+            self.y = 120
             self.isJump = 1
             self.v = VELOCITY
 
