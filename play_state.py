@@ -6,11 +6,13 @@ from Background import stage1
 from Items import Mushroom, Fire_Flower, Star
 from Mario import Mario
 from Enemy import Goomba, KoopaTroopa
+from Tiles import Tile, Item_Box, Pipe, Grid
 
 mario = None
 enemy = []
 items = []
 back = None
+tiles = []
 
 def handle_events():
     events = get_events()
@@ -24,17 +26,23 @@ def handle_events():
 
 # 초기화
 def enter():
-    global mario, items, enemy, back
+    global mario, items, enemy, back, tiles
     mario = Mario()
     items = [Mushroom(), Fire_Flower(), Star()]
     enemy = [Goomba(), KoopaTroopa()]
     back = stage1()
+    tiles = [Tile(), Item_Box(), Pipe(), Grid()]
     game_world.add_object(back, 0)
     game_world.add_object(mario, 1)
     for item in items:
         game_world.add_object(item, 1)
     for mob in enemy:
         game_world.add_object(mob, 1)
+    for tile in tiles:
+        game_world.add_object(tile, 1)
+
+    # 충돌대상 정보 등록
+    game_world.add_collision_pairs(mario, items[0], "mario:mushroom")
 
 # 종료
 def exit():
@@ -43,6 +51,12 @@ def exit():
 def update():
     for game_object in game_world.all_objects():
         game_object.update()
+
+    for a, b, group in game_world.all_collision_pairs():
+        if collide(a, b):
+            print('Collision', group)
+            a.handle_collision(b, group)
+            b.handle_collision(a, group)
 
 def draw_world():
     for game_object in game_world.all_objects():

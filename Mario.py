@@ -1,11 +1,12 @@
 from pico2d import *
 import game_framework
+import time
 
 VELOCITY = 1 # 속도
 MASS = 1000 # 질량
 
 PIXEL_PER_METER = (10.0/0.3)
-MOVE_SPEED_KMPH = 30.0
+MOVE_SPEED_KMPH = 40.0
 MOVE_SPEED_MPM = (MOVE_SPEED_KMPH * 1000.0 / 60.0)
 MOVE_SPEED_MPS = (MOVE_SPEED_MPM / 60.0)
 MOVE_SPEED_PPS = (MOVE_SPEED_MPS * PIXEL_PER_METER)
@@ -74,9 +75,9 @@ class RUN:
 
 
     def do(self):
-        self.frame = (self.frame + 1) % 3
-        self.x += self.dir
-        self.x = clamp(0, self.x, 1600)
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        self.x += self.dir * self.speed * game_framework.frame_time
+        self.x = clamp(0, self.x, 1290)
 
     def draw(self):
         if self.dir == -1:
@@ -146,6 +147,7 @@ class Mario:
         self.m = MASS # 질량
         self.life = 1
         self.state = None
+        self.speed = MOVE_SPEED_PPS
 
         self.event_que = []
         self.cur_state = IDLE
@@ -153,88 +155,12 @@ class Mario:
 
     def draw(self): #그리기
         self.cur_state.draw(self)
-        # if self.dir == 1: # 오른쪽을 향할 때
-        #     if self.isJump > 0: # 점프할 때
-        #         self.image.clip_draw(600, 91, 100, 75, self.x, self.y)
-        #     else:
-        #         # if self.state == 'mushroom':
-        #         #     self.bigform.clip_draw(int(self.frame) * 100 + 100, self.pose + 91 + 192, 100, 110, self.x, self.y)
-        #         # else:
-        #         self.image.clip_draw(int(self.frame) * 100 + 100, self.pose + 91, 100, 75, self.x, self.y)
-        #     # if self.state == 'mushroom':
-        #     #     self.pose = 0
-        #     # else:
-        #     self.pose = -1
-        # elif self.dir == -1: # 왼쪽을 향할때
-        #     if self.isJump > 0:
-        #         self.image.clip_draw(700, 335, 100, 75, self.x, self.y)
-        #     else:
-        #         # if self.state == 'mushroom':
-        #         #     self.bigform.clip_draw(int(self.frame) * 100 + 1000, self.pose + 12 + 272, 100, 110, self.x, self.y)
-        #         # else:
-        #         self.image.clip_draw(int(self.frame) * 100 + 1000, self.pose + 12, 100, 75, self.x, self.y)
-        #     # if self.state == 'mushroom':
-        #     #     self.pose = 410
-        #     # else:
-        #     self.pose = 320
-        # elif self.dir == 0: # 스탠딩
-        #     # if self.state == 'mushroom':
-        #     #     self.pose += 92
-        #     # else:
-        #     self.pose += 92
-        #     if self.isJump > 0:
-        #         # if self.state == 'mushroom':
-        #         #     self.bigform.clip_draw(600, 91 + 50, 100, 110, self.x, self.y)
-        #         # else:
-        #         self.image.clip_draw(600, 91, 100, 75, self.x, self.y)
-        #     else:
-        #         # if self.state == 'mushroom':
-        #         #     self.bigform.clip_draw(0, self.pose + 192, 100, 110, self.x, self.y)
-        #         # else:
-        #         self.image.clip_draw(0, self.pose, 100, 75, self.x, self.y)
-        #     # if self.state == 'mushroom':
-        #     #     self.pose -= 92
-        #     # else:
-        #     self.pose -= 92
-
-    # def screen_check(self): # 화면 밖으로 못나가게 하기
-    #     if self.x > 1400:
-    #         self.x = 1400
-    #
-    #     elif self.x < 0:
-    #         self.x = 0
-    #
-    #     elif self.y < 35:
-    #         self.y = 35
-    #
-    #     elif self.y > 700:
-    #         self.y = 700 -10
+        draw_rectangle(*self.get_bb())
 
     def jump(self, j): # 점프 상태 체크
         self.isJump = j
 
     def update(self): # 이동 관련
-        # self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
-        # self.x += self.dir * MOVE_SPEED_PPS * game_framework.frame_time
-        # if self.isJump > 0:
-        #
-        #     # if self.isJump == 2: # 이단 점프
-        #     #     self.v = VELOCITY
-        #
-        #     # 역학공식 계산 (F). F = 0.5 * mass * velocity^2.
-        #     if self.v > 0: # 속도가 0보다 클 때는 위로 올라감
-        #         F = -(0.005 * self.m * (self.v **2))
-        #     else: # 속도가 0보다 작을 때는 아래로 내려감
-        #         F = (0.005 * self.m * (self.v **2))
-        #
-        #     self.y -= round(F) # 좌표 반영하기
-        #
-        #     self.v -= 0.009 # 속도 줄이기
-        #
-        #     if self.y < 35: # 바닥에 닿았을때 변수 리셋
-        #         self.y = 35
-        #         self.isJump = 0
-        #         self.v = VELOCITY
         self.cur_state.do(self)
 
         if self.event_que:
@@ -281,6 +207,11 @@ class Mario:
             if event.key == SDLK_SPACE:
                 JUMP.enter(self,event)
 
+    def get_bb(self):
+        return self.x - 20, self.y - 30, self.x + 20, self.y + 10
 
+    def handle_collision(self, other, group):
+        self.speed = self.speed * 2
+        pass
 
 

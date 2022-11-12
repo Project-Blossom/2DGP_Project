@@ -1,4 +1,5 @@
 from pico2d import *
+import game_world
 # import maingame as screen
 
 VELOCITY = 1  # 속도
@@ -21,6 +22,13 @@ class Mushroom:
             self.y -= 1
         if self.y-20 <= 100:
             self.x += self.dir_x
+
+    def get_bb(self):
+        return self.x - 25, self.y - 30, self.x + 25, self.y + 20
+
+    def handle_collision(self, other, group):
+        if group == 'mario:mushroom':
+            game_world.remove_object(self)
 
 class Fire_Flower:
     def __init__(self):
