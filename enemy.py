@@ -15,26 +15,42 @@ FRAMES_PER_ACTION = 8
 class Goomba:
     def __init__(self):
         self.image = load_image("Monsters.png")
-        self.dir_x = 1
-        self.x, self.y = 1400 // 2 + 350, 35 + 200  # 초기 위치 (화면 하단 중앙)
+        self.dir_x = -1
+        self.x, self.y = 1400 // 2 , 500  # 초기 위치 (화면 하단 중앙)
         self.frame = 0
-
 
     def draw(self): #그리기
         self.image.clip_draw(int(self.frame) * 64 + 67, 785, 64, 50, self.x, self.y)
-        draw_rectangle(*self.bb)
+        draw_rectangle(*self.get_bb())
 
     def update(self): # 이동 관련
         screen_check(self)
+        if self.y-20 > 100:
+            self.y -= 1
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
         self.x += self.dir_x * MOVE_SPEED_PPS * game_framework.frame_time
-        self.bb = [self.x - 23, self.y - 30, self.x + 23, self.y + 20]
+
+    def get_bb(self):
+        return self.x - 20, self.y - 27, self.x + 20, self.y + 20
+
+    def handle_collision(self, other, group):
+        if group == 'mario:enemy':
+            pass
+
+    def handle_side_collision(self, other, group):
+        if group == 'enemy:wall':
+            self.dir_x = -self.dir_x
+            pass
+
+    def handle_floor_collision(self, other, group):
+        if group == 'enemy:floor':
+            self.y = other.y + other.dis + 1 + 25
 
 class KoopaTroopa:
     def __init__(self):
         self.image = load_image("Monsters.png")
         self.dir_x = -1
-        self.x, self.y = 1400 // 2 - 350, 35 + 200  # 초기 위치 (화면 하단 중앙)
+        self.x, self.y = 1400 // 2 - 350,  500   # 초기 위치 (화면 하단 중앙)
         self.pose = 0
         self.frame = 0
 
@@ -44,13 +60,68 @@ class KoopaTroopa:
             self.image.clip_draw(int(self.frame) * 64 + 67, 525, 64, 75, self.x, self.y)
         elif self.dir_x == -1: # 왼쪽을 향할때
             self.image.clip_composite_draw(int(self.frame) * 64 + 67, 525, 64, 75, 0,'h',self.x, self.y, 64, 75)
-        draw_rectangle(*self.bb)
+        draw_rectangle(*self.get_bb())
 
     def update(self): # 이동 관련
         screen_check(self)
+        if self.y-20 > 100:
+            self.y -= 1
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
         self.x += self.dir_x * MOVE_SPEED_PPS * game_framework.frame_time
-        self.bb = [self.x - 25, self.y - 30, self.x + 25, self.y + 20]
+
+    def get_bb(self):
+        return self.x - 25, self.y - 30, self.x + 25, self.y + 20
+
+    def handle_collision(self, other, group):
+        if group == 'mario:enemy':
+            pass
+
+    def handle_side_collision(self, other, group):
+        if group == 'enemy:wall':
+            self.dir_x = -self.dir_x
+            pass
+
+    def handle_floor_collision(self, other, group):
+        if group == 'enemy:floor':
+            self.y = other.y + other.dis + 1 + 25
+
+class RedTroopa:
+    def __init__(self):
+        self.image = load_image("Monsters.png")
+        self.dir_x = -1
+        self.x, self.y = 1400 // 2 + 350, 400   # 초기 위치 (화면 하단 중앙)
+        self.pose = 0
+        self.frame = 0
+
+    def draw(self): #그리기
+        if self.dir_x == 1: # 오른쪽을 향할 때
+            self.image.clip_draw(int(self.frame) * 64 + 67*6-10, 525, 64, 75, self.x, self.y)
+        elif self.dir_x == -1: # 왼쪽을 향할때
+            self.image.clip_composite_draw(int(self.frame) * 64 + 67*6, 525, 64, 75, 0,'h',self.x, self.y, 64, 75)
+        draw_rectangle(*self.get_bb())
+
+    def update(self): # 이동 관련
+        screen_check(self)
+        if self.y-20 > 100:
+            self.y -= 1
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
+        self.x += self.dir_x * MOVE_SPEED_PPS * game_framework.frame_time
+
+    def get_bb(self):
+        return self.x - 25, self.y - 30, self.x + 25, self.y + 20
+
+    def handle_collision(self, other, group):
+        if group == 'mario:enemy':
+            pass
+
+    def handle_side_collision(self, other, group):
+        if group == 'enemy:wall':
+            self.dir_x = -self.dir_x
+            pass
+
+    def handle_floor_collision(self, other, group):
+        if group == 'enemy:floor':
+            self.y = other.y + other.dis + 1 + 25
 
 def screen_check(obj):
     if obj.x > 1400:

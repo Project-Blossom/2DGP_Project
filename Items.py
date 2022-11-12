@@ -1,9 +1,16 @@
 from pico2d import *
 import game_world
-# import maingame as screen
+
+import game_framework
 
 VELOCITY = 1  # 속도
 MASS = 1000  # 질량
+
+PIXEL_PER_METER = (10.0/0.3)
+MOVE_SPEED_KMPH = 30.0
+MOVE_SPEED_MPM = (MOVE_SPEED_KMPH * 1000.0 / 60.0)
+MOVE_SPEED_MPS = (MOVE_SPEED_MPM / 60.0)
+MOVE_SPEED_PPS = (MOVE_SPEED_MPS * PIXEL_PER_METER)
 
 class Mushroom:
     def __init__(self):
@@ -14,21 +21,33 @@ class Mushroom:
 
     def draw(self):
         self.image.clip_draw(0, 0, 80, 60, self.x, self.y)
-        draw_rectangle(*get_bb(self))
+        draw_rectangle(*self.get_bb())
 
     def update(self):
         screen_check(self)
         if self.y-20 > 100:
             self.y -= 1
         if self.y-20 <= 100:
-            self.x += self.dir_x
+            self.x += self.dir_x * MOVE_SPEED_PPS * game_framework.frame_time
 
     def get_bb(self):
         return self.x - 25, self.y - 30, self.x + 25, self.y + 20
 
     def handle_collision(self, other, group):
-        if group == 'mario:mushroom':
+        if group == 'mario:item':
             game_world.remove_object(self)
+
+    def handle_side_collision(self, other, group):
+        if group == 'item:wall':
+            pass
+
+    def handle_floor_collision(self, other, group):
+        if group == 'item:floor':
+            self.y = 120
+            self.isJump = 1
+            self.v = VELOCITY
+
+
 
 class Fire_Flower:
     def __init__(self):
@@ -39,12 +58,30 @@ class Fire_Flower:
 
     def draw(self):
         self.image.clip_draw(190, 0, 100, 60, self.x, self.y)
-        draw_rectangle(*get_bb(self))
+        draw_rectangle(*self.get_bb())
 
     def update(self):
         screen_check(self)
         if self.y-20 > 100:
             self.y -= 1
+
+    def get_bb(self):
+        return self.x - 25, self.y - 30, self.x + 25, self.y + 20
+
+    def handle_collision(self, other, group):
+        if group == 'mario:item':
+            game_world.remove_object(self)
+            pass
+
+    def handle_side_collision(self, other, group):
+        if group == 'item:wall':
+            pass
+
+    def handle_floor_collision(self, other, group):
+        if group == 'item:floor':
+            self.y = 120
+            self.isJump = 1
+            self.v = VELOCITY
 
 
 class Star:
@@ -58,7 +95,7 @@ class Star:
 
     def draw(self):
         self.image.clip_draw(395, 0, 110, 60, self.x, self.y)
-        draw_rectangle(*get_bb(self))
+        draw_rectangle(*self.get_bb())
 
     def update(self):
         screen_check(self)
@@ -86,6 +123,26 @@ class Star:
             self.isJump = 1
             self.v = VELOCITY
 
+    def get_bb(self):
+        return self.x - 25, self.y - 30, self.x + 25, self.y + 20
+
+    def handle_collision(self, other, group):
+        if group == 'mario:item':
+            game_world.remove_object(self)
+            pass
+
+    def handle_side_collision(self, other, group):
+        if group == 'item:wall':
+            self.dir_x = -self.dir_x
+            pass
+
+    def handle_floor_collision(self, other, group):
+        if group == 'item:floor':
+            self.y = other.y + other.dis + 1 + 25
+            self.isJump = 1
+            self.v = VELOCITY
+            pass
+
 
 def screen_check(obj):
     if obj.x > 1400:
@@ -102,6 +159,5 @@ def screen_check(obj):
     elif obj.y > 700:
         obj.y = 700 - 10
 
-def get_bb(obj):
-    return obj.x-25, obj.y-30, obj.x+25, obj.y+20
+
 

@@ -5,8 +5,8 @@ import game_world
 from Background import stage1
 from Items import Mushroom, Fire_Flower, Star
 from Mario import Mario
-from Enemy import Goomba, KoopaTroopa
-from Tiles import Tile, Item_Box, Pipe, Grid
+from Enemy import Goomba, KoopaTroopa, RedTroopa
+from Tiles import Tile, Item_Box, Pipe, Brick
 
 mario = None
 enemy = []
@@ -29,9 +29,9 @@ def enter():
     global mario, items, enemy, back, tiles
     mario = Mario()
     items = [Mushroom(), Fire_Flower(), Star()]
-    enemy = [Goomba(), KoopaTroopa()]
+    enemy = [Goomba(), KoopaTroopa(), RedTroopa()]
     back = stage1()
-    tiles = [Tile(), Item_Box(), Pipe(), Grid()]
+    tiles = [Tile(), Brick(),Item_Box(), Pipe()]
     game_world.add_object(back, 0)
     game_world.add_object(mario, 1)
     for item in items:
@@ -42,7 +42,13 @@ def enter():
         game_world.add_object(tile, 1)
 
     # 충돌대상 정보 등록
-    game_world.add_collision_pairs(mario, items[0], "mario:mushroom")
+
+    game_world.add_collision_pairs(mario, items, "mario:item")
+    game_world.add_collision_pairs(mario, enemy, "mario:enemy")
+    game_world.add_collision_pairs(items, tiles, "item:wall")
+    game_world.add_collision_pairs(enemy, tiles, "enemy:wall")
+    game_world.add_collision_pairs(items, tiles, "item:floor")
+    game_world.add_collision_pairs(enemy, tiles, "enemy:floor")
 
 # 종료
 def exit():
@@ -57,6 +63,16 @@ def update():
             print('Collision', group)
             a.handle_collision(b, group)
             b.handle_collision(a, group)
+        if floor_collide(a, b):
+            print('Floor_Collision', group)
+            a.handle_floor_collision(b, group)
+            b.handle_floor_collision(a, group)
+        elif side_collide(a, b):
+            print('Side_Collision', group)
+            a.handle_side_collision(b, group)
+            b.handle_side_collision(a, group)
+
+
 
 def draw_world():
     for game_object in game_world.all_objects():
@@ -83,6 +99,29 @@ def collide(a,b):
     if ba > tb: return False
 
     return True
+
+def floor_collide(a,b):
+    la, ba, ra, ta = a.get_bb()
+    lb, bb, rb, tb = b.get_bb()
+
+    if lb+1 < la < rb-1 or lb+1 < ra < rb-1:
+        if ba > tb:
+            return False
+        if ta < bb:
+            return False
+        return True
+
+def side_collide(a,b):
+    la, ba, ra, ta = a.get_bb()
+    lb, bb, rb, tb = b.get_bb()
+
+    if bb+1 < ta < tb-1 or bb+1 < ba < tb-1:
+        if la > rb:
+            return False
+        if ra < lb:
+            return False
+        return True
+
 
 def test_self():
     import play_state

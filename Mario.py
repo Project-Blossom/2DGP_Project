@@ -13,7 +13,7 @@ MOVE_SPEED_PPS = (MOVE_SPEED_MPS * PIXEL_PER_METER)
 
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 0.5 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 8
+FRAMES_PER_ACTION = 3
 
 RD, LD, RU, LU, SPACE = range(5)
 event_name = ['RD', 'LD', 'RU', 'LU', 'SPACE']
@@ -75,8 +75,8 @@ class RUN:
 
 
     def do(self):
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
-        self.x += self.dir * self.speed * game_framework.frame_time
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time * self.speed) % 3
+        self.x += self.dir * MOVE_SPEED_PPS * game_framework.frame_time * self.speed
         self.x = clamp(0, self.x, 1290)
 
     def draw(self):
@@ -147,7 +147,7 @@ class Mario:
         self.m = MASS # 질량
         self.life = 1
         self.state = None
-        self.speed = MOVE_SPEED_PPS
+        self.speed = 1
 
         self.event_que = []
         self.cur_state = IDLE
@@ -211,7 +211,16 @@ class Mario:
         return self.x - 20, self.y - 30, self.x + 20, self.y + 10
 
     def handle_collision(self, other, group):
-        self.speed = self.speed * 2
+        if group == 'mario:item':
+            self.speed += 0.5
+        elif group == 'mario:enemy':
+            pass
+        pass
+
+    def handle_side_collision(self, other, group):
+        pass
+
+    def handle_floor_collision(self, other, group):
         pass
 
 
