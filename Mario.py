@@ -118,6 +118,7 @@ class JUMP:
                 self.y = 120
                 self.isJump = 0
                 self.v = VELOCITY
+                self.exit(self,None)
         pass
 
     def draw(self):
@@ -172,6 +173,9 @@ class Mario:
                 print(f'ERROR: State {self.cur_state.__name__}    Event {event_name[event]}')
             self.cur_state.enter(self, event)
 
+        if self.isJump > 0:
+            JUMP.enter(self, None)
+
     def add_event(self, event):
         self.event_que.insert(0, event)
 
@@ -203,9 +207,9 @@ class Mario:
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
-        if event.type == SDL_KEYDOWN:
-            if event.key == SDLK_SPACE:
-                JUMP.enter(self,event)
+        if (event.type, event.key) in key_event_table:
+            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
+                self.jump(1)
 
     def get_bb(self):
         return self.x - 20, self.y - 30, self.x + 20, self.y + 10
