@@ -2,8 +2,10 @@ from pico2d import *
 import game_framework
 import time
 
+
+Floor = 100
 VELOCITY = 1 # 속도
-MASS = 1000 # 질량
+MASS = 12 # 질량
 
 PIXEL_PER_METER = (10.0/0.3)
 MOVE_SPEED_KMPH = 40.0
@@ -77,7 +79,7 @@ class RUN:
     def do(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time * self.speed) % 3
         self.x += self.dir * MOVE_SPEED_PPS * game_framework.frame_time * self.speed
-        self.x = clamp(0, self.x, 1290)
+        self.x = clamp(0, self.x, 1400)
 
     def draw(self):
         if self.dir == -1:
@@ -87,7 +89,7 @@ class RUN:
             self.image.clip_draw(int(self.frame) * 100 + 100, self.pose + 91, 100, 75, self.x, self.y)
             self.pose = -1
 class JUMP:
-    def enter(self, event):
+    def enter(self):
         print('JUMP!')
         if self.isJump == 0:
             self.jump(1)
@@ -106,19 +108,18 @@ class JUMP:
 
             # 역학공식 계산 (F). F = 0.5 * mass * velocity^2.
             if self.v > 0: # 속도가 0보다 클 때는 위로 올라감
-                F = -(0.005 * self.m * (self.v **2))
+                F = -(0.5 * self.m * (self.v **2))
             else: # 속도가 0보다 작을 때는 아래로 내려감
-                F = (0.005 * self.m * (self.v **2))
+                F = (0.5 * self.m * (self.v **2))
 
-            self.y -= round(F) # 좌표 반영하기
+            self.y -= F # 좌표 반영하기
+            # if(self.v > )
+            self.v -= 0.01 # 속도 줄이기
 
-            self.v -= 0.009 # 속도 줄이기
-
-            if self.y-20 < 100: # 바닥에 닿았을때 변수 리셋
-                self.y = 120
+            if self.y-20 < Floor: # 바닥에 닿았을때 변수 리셋
+                self.y = Floor + 20
                 self.isJump = 0
                 self.v = VELOCITY
-                self.exit(self,None)
         pass
 
     def draw(self):
@@ -129,6 +130,25 @@ class JUMP:
         elif self.dir == 0:  # 스탠딩
             self.image.clip_draw(600, 91, 100, 75, self.x, self.y)
         pass
+
+class STAMP:
+    def do(self):
+        # 역학공식 계산 (F). F = 0.5 * mass * velocity^2.
+        if self.v > 0:  # 속도가 0보다 클 때는 위로 올라감
+            F = -(0.5 * self.m * (self.v ** 2))
+        else:  # 속도가 0보다 작을 때는 아래로 내려감
+            F = (0.5 * self.m * (self.v ** 2))
+
+        self.y -= F  # 좌표 반영하기
+        # if(self.v > )
+        self.v -= 0.01  # 속도 줄이기
+
+        if self.y - 20 < Floor:  # 바닥에 닿았을때 변수 리셋
+            self.y = Floor + 20
+            self.isJump = 0
+            self.v = VELOCITY
+        pass
+
 
 next_state = {
     IDLE: {RU: RUN, LU: RUN, RD: RUN, LD: RUN},
@@ -149,6 +169,7 @@ class Mario:
         self.life = 1
         self.state = None
         self.speed = 1
+        self.font = load_font('ENCR10B.TTF', 16)
 
         self.event_que = []
         self.cur_state = IDLE
@@ -157,13 +178,16 @@ class Mario:
     def draw(self): #그리기
         self.cur_state.draw(self)
         draw_rectangle(*self.get_bb())
+        self.font.draw(self.x+20,self.y+10,f'x={self.x:.2f},y={self.y:.2f}',(255,255,255))
 
     def jump(self, j): # 점프 상태 체크
         self.isJump = j
 
     def update(self): # 이동 관련
         self.cur_state.do(self)
-
+        self.speed = 1 + ((self.y-125)/200)
+        # if self.y - 20 > 100:
+        #     self.y -= 3
         if self.event_que:
             event = self.event_que.pop()
             self.cur_state.exit(self, event)
@@ -174,42 +198,20 @@ class Mario:
             self.cur_state.enter(self, event)
 
         if self.isJump > 0:
-            JUMP.enter(self, None)
+            JUMP.do(self)
 
     def add_event(self, event):
         self.event_que.insert(0, event)
 
     def handle_events(self, event):
-        # events = get_events()
-        # for event in events:
-        #     if event.type == SDL_QUIT:
-        #         game_framework.quit()
-        #     elif event.type == SDL_KEYDOWN:
-        #         if event.key == SDLK_ESCAPE:
-        #             game_framework.quit()
-        #         elif event.key == SDLK_RIGHT:
-        #             self.dir += 1
-        #         elif event.key == SDLK_LEFT:
-        #             self.dir -= 1
-        #         elif event.key == SDLK_SPACE:
-        #             if self.isJump == 0:
-        #                 self.jump(1)
-        #             elif self.isJump == 1:
-        #                 self.jump(2)
-        #     elif event.type == SDL_KEYUP:
-        #         if event.key == SDLK_RIGHT:
-        #             self.dir -= 1
-        #         elif event.key == SDLK_LEFT:
-        #             self.dir += 1
-        #         # elif event.key == SDLK_SPACE:
-        #         #     if mario.isJump == 1:
-        #         #         mario.jump(0)
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
         if (event.type, event.key) in key_event_table:
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
                 self.jump(1)
+            if (event.type, event.key) == (SDL_KEYUP, SDLK_SPACE):
+                pass
 
     def get_bb(self):
         return self.x - 20, self.y - 30, self.x + 20, self.y + 10
@@ -219,12 +221,31 @@ class Mario:
             self.speed += 0.5
         elif group == 'mario:enemy':
             pass
+        elif group == 'mario:block':
+            if self.y < other.y:
+                self.y = other.get_bb()[1] - 11
+                self.v = -self.v
+            if self.y > other.y:
+                self.y = other.get_bb()[3] + 31
+                self.isJump = 0
+                self.v = VELOCITY
+            pass
         pass
 
     def handle_side_collision(self, other, group):
+        if group == 'mario:enemy':
+            pass
+        if group == 'mario:block':
+            if self.x < other.x:
+                self.x = other.get_bb()[0] - 21
+            if self.x > other.x:
+                self.x = other.get_bb()[2] + 21
+
         pass
 
     def handle_floor_collision(self, other, group):
+        if group == 'mario:enemy':
+            pass
         pass
 
 

@@ -6,5 +6,5 @@ import title_state
 WIDTH, HEIGHT = 1400, 700
 
 open_canvas(WIDTH, HEIGHT)
-game_framework.run(title_state)
+game_framework.run(play_state)
 close_canvas()

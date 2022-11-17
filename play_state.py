@@ -45,6 +45,7 @@ def enter():
 
     game_world.add_collision_pairs(mario, items, "mario:item")
     game_world.add_collision_pairs(mario, enemy, "mario:enemy")
+    game_world.add_collision_pairs(mario, tiles, "mario:block")
     game_world.add_collision_pairs(items, tiles, "item:wall")
     game_world.add_collision_pairs(enemy, tiles, "enemy:wall")
     game_world.add_collision_pairs(items, tiles, "item:floor")

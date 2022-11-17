@@ -1,6 +1,7 @@
 from pico2d import *
 # import maingame as screen
 import game_framework
+import game_world
 
 PIXEL_PER_METER = (10.0/0.3)
 MOVE_SPEED_KMPH = 15.0
@@ -45,6 +46,8 @@ class Goomba:
     def handle_floor_collision(self, other, group):
         if group == 'enemy:floor':
             self.y = other.y + other.dis + 1 + 25
+        if group == 'mario:enemy':
+            pass
 
 class KoopaTroopa:
     def __init__(self):
@@ -84,6 +87,8 @@ class KoopaTroopa:
     def handle_floor_collision(self, other, group):
         if group == 'enemy:floor':
             self.y = other.y + other.dis + 1 + 25
+        if group == 'mario:enemy':
+            pass
 
 class RedTroopa:
     def __init__(self):
@@ -122,6 +127,8 @@ class RedTroopa:
     def handle_floor_collision(self, other, group):
         if group == 'enemy:floor':
             self.y = other.y + other.dis + 1 + 25
+        if group == 'mario:enemy':
+            pass
 
 def screen_check(obj):
     if obj.x > 1400:
