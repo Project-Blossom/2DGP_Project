@@ -66,6 +66,7 @@ def update():
             b.handle_collision(a, group)
         if floor_collide(a, b):
             print('Floor_Collision', group)
+
             a.handle_floor_collision(b, group)
             b.handle_floor_collision(a, group)
         elif side_collide(a, b):
@@ -105,7 +106,7 @@ def floor_collide(a,b):
     la, ba, ra, ta = a.get_bb()
     lb, bb, rb, tb = b.get_bb()
 
-    if lb+1 < la < rb-1 or lb+1 < ra < rb-1:
+    if lb+5 < la < rb-5 or lb+5 < ra < rb-5:
         if ba > tb:
             return False
         if ta < bb:
@@ -122,7 +123,6 @@ def side_collide(a,b):
         if ra < lb:
             return False
         return True
-
 
 def test_self():
     import play_state

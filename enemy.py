@@ -47,6 +47,7 @@ class Goomba:
         if group == 'enemy:floor':
             self.y = other.y + other.dis + 1 + 25
         if group == 'mario:enemy':
+            game_world.remove_object(self)
             pass
 
 class KoopaTroopa:
@@ -56,13 +57,16 @@ class KoopaTroopa:
         self.x, self.y = 1400 // 2 - 350,  500   # 초기 위치 (화면 하단 중앙)
         self.pose = 0
         self.frame = 0
-
+        self.state = None
 
     def draw(self): #그리기
-        if self.dir_x == 1: # 오른쪽을 향할 때
-            self.image.clip_draw(int(self.frame) * 64 + 67, 525, 64, 75, self.x, self.y)
-        elif self.dir_x == -1: # 왼쪽을 향할때
-            self.image.clip_composite_draw(int(self.frame) * 64 + 67, 525, 64, 75, 0,'h',self.x, self.y, 64, 75)
+        if self.state == None:
+            if self.dir_x == 1: # 오른쪽을 향할 때
+                self.image.clip_draw(int(self.frame) * 64 + 67, 525, 64, 75, self.x, self.y)
+            elif self.dir_x == -1: # 왼쪽을 향할때
+                self.image.clip_composite_draw(int(self.frame) * 64 + 67, 525, 64, 75, 0,'h',self.x, self.y, 64, 75)
+        else:
+            self.image.clip_draw(int(self.frame) * 64 + 67, 450, 64, 75, self.x, self.y)
         draw_rectangle(*self.get_bb())
 
     def update(self): # 이동 관련
@@ -88,6 +92,8 @@ class KoopaTroopa:
         if group == 'enemy:floor':
             self.y = other.y + other.dis + 1 + 25
         if group == 'mario:enemy':
+            self.state = 'STAMPED'
+            self.dir_x = 0
             pass
 
 class RedTroopa:
@@ -97,12 +103,16 @@ class RedTroopa:
         self.x, self.y = 1400 // 2 + 350, 400   # 초기 위치 (화면 하단 중앙)
         self.pose = 0
         self.frame = 0
+        self.state = None
 
     def draw(self): #그리기
-        if self.dir_x == 1: # 오른쪽을 향할 때
-            self.image.clip_draw(int(self.frame) * 64 + 67*6-10, 525, 64, 75, self.x, self.y)
-        elif self.dir_x == -1: # 왼쪽을 향할때
-            self.image.clip_composite_draw(int(self.frame) * 64 + 67*6, 525, 64, 75, 0,'h',self.x, self.y, 64, 75)
+        if self.state == None:
+            if self.dir_x == 1: # 오른쪽을 향할 때
+                self.image.clip_draw(int(self.frame) * 64 + 67*6-10, 525, 64, 75, self.x, self.y)
+            elif self.dir_x == -1: # 왼쪽을 향할때
+                self.image.clip_composite_draw(int(self.frame) * 64 + 67*6, 525, 64, 75, 0,'h',self.x, self.y, 64, 75)
+        else:
+            self.image.clip_draw(int(self.frame) * 64 + 67 * 6 - 10, 450, 64, 75, self.x, self.y)
         draw_rectangle(*self.get_bb())
 
     def update(self): # 이동 관련
@@ -128,7 +138,16 @@ class RedTroopa:
         if group == 'enemy:floor':
             self.y = other.y + other.dis + 1 + 25
         if group == 'mario:enemy':
+            if self.state == 'STAMPED':
+                self.dir_x = 1
+            else:
+                self.state = 'STAMPED'
+                self.dir_x = 0
             pass
+
+class StampedTroopa:
+    def __init__(self):
+        pass
 
 def screen_check(obj):
     if obj.x > 1400:

@@ -114,7 +114,7 @@ class JUMP:
 
             self.y -= F # 좌표 반영하기
             # if(self.v > )
-            self.v -= 0.01 # 속도 줄이기
+            self.v -= self.gravity # 속도 줄이기
 
             if self.y-20 < Floor: # 바닥에 닿았을때 변수 리셋
                 self.y = Floor + 20
@@ -170,6 +170,7 @@ class Mario:
         self.state = None
         self.speed = 1
         self.font = load_font('ENCR10B.TTF', 16)
+        self.gravity = 0.01
 
         self.event_que = []
         self.cur_state = IDLE
@@ -245,6 +246,8 @@ class Mario:
 
     def handle_floor_collision(self, other, group):
         if group == 'mario:enemy':
+
+            self.jump(1)
             pass
         pass
 
