@@ -187,8 +187,8 @@ class Mario:
     def update(self): # 이동 관련
         self.cur_state.do(self)
         self.speed = 1 + ((self.y-125)/200)
-        # if self.y - 20 > 100:
-        #     self.y -= 3
+        if self.y - 20 > 100 and self.isJump == 0:
+            self.y -= 0.5 * self.m * (self.v ** 2) / 2
         if self.event_que:
             event = self.event_que.pop()
             self.cur_state.exit(self, event)
