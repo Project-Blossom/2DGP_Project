@@ -19,10 +19,16 @@ class Goomba:
         self.dir_x = -1
         self.x, self.y = 1400 // 2 , 500  # 초기 위치 (화면 하단 중앙)
         self.frame = 0
+        self.timer = 300
+        self.state = None
 
     def draw(self): #그리기
-        self.image.clip_draw(int(self.frame) * 64 + 67, 785, 64, 50, self.x, self.y)
+        if self.state == 'dead':
+            self.image.clip_draw(2 * 64 + 67, 785, 64, 50, self.x, self.y)
+        else:
+            self.image.clip_draw(int(self.frame) * 64 + 67, 785, 64, 50, self.x, self.y)
         draw_rectangle(*self.get_bb())
+
 
     def update(self): # 이동 관련
         screen_check(self)
@@ -30,6 +36,11 @@ class Goomba:
             self.y -= 1
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
         self.x += self.dir_x * MOVE_SPEED_PPS * game_framework.frame_time
+        if self.state == 'dead':
+            self.timer -= 1
+        if self.timer == 0:
+            game_world.remove_object(self)
+
 
     def get_bb(self):
         return self.x - 20, self.y - 27, self.x + 20, self.y + 20
@@ -47,7 +58,8 @@ class Goomba:
         if group == 'enemy:floor':
             self.y = other.y + other.dis + 1 + 25
         if group == 'mario:enemy':
-            game_world.remove_object(self)
+            self.dir_x = 0
+            self.state = 'dead'
             pass
 
 class KoopaTroopa:
@@ -92,8 +104,11 @@ class KoopaTroopa:
         if group == 'enemy:floor':
             self.y = other.y + other.dis + 1 + 25
         if group == 'mario:enemy':
-            self.state = 'STAMPED'
-            self.dir_x = 0
+            if self.state == 'STAMPED':
+                self.dir_x = 2
+            else:
+                self.state = 'STAMPED'
+                self.dir_x = 0
             pass
 
 class RedTroopa:
@@ -139,13 +154,13 @@ class RedTroopa:
             self.y = other.y + other.dis + 1 + 25
         if group == 'mario:enemy':
             if self.state == 'STAMPED':
-                self.dir_x = 1
+                self.dir_x = 2
             else:
                 self.state = 'STAMPED'
                 self.dir_x = 0
             pass
 
-class StampedTroopa:
+class Stamped:
     def __init__(self):
         pass
 

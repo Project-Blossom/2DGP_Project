@@ -135,9 +135,9 @@ class STAMP:
     def do(self):
         # 역학공식 계산 (F). F = 0.5 * mass * velocity^2.
         if self.v > 0:  # 속도가 0보다 클 때는 위로 올라감
-            F = -(0.5 * self.m * (self.v ** 2))
-        else:  # 속도가 0보다 작을 때는 아래로 내려감
-            F = (0.5 * self.m * (self.v ** 2))
+            F = -(0.5 * self.m * ((self.v-0.5) ** 2))
+        else:  # 속도가 0이하일 때는 아래로 내려감
+            F = (0.5 * self.m * ((self.v-0.5) ** 2))
 
         self.y -= F  # 좌표 반영하기
         # if(self.v > )
@@ -149,6 +149,16 @@ class STAMP:
             self.v = VELOCITY
         pass
 
+class HITBACK:
+    def do(self):
+        if self.ishit > 0:
+            if self.v <= 0:
+                self.v = VELOCITY
+                self.ishit = 0
+            if self.v > 0:
+                F = (1.5 * self.m * (self.v ** 2))
+            self.x -= F
+            self.v -= 0.01
 
 next_state = {
     IDLE: {RU: RUN, LU: RUN, RD: RUN, LD: RUN},
@@ -160,7 +170,7 @@ class Mario:
         self.image = load_image('SmallMario.png')
         # self.bigform = load_image('BigMario.png')
         self.dir, self.face_dir = 0, 1
-        self.x, self.y = 1400 // 2, 25 + 100 # 초기 위치 (화면 하단 중앙)
+        self.x, self.y = 1400 // 2 - 350, 25 + 100 # 초기 위치 (화면 하단 중앙)
         self.pose = 0
         self.frame = 0
         self.isJump = 0 # 점프 확인
@@ -168,9 +178,12 @@ class Mario:
         self.m = MASS # 질량
         self.life = 1
         self.state = None
-        self.speed = 1
+        self.speed = 0.5
         self.font = load_font('ENCR10B.TTF', 16)
+        self.ishit = 0
         self.gravity = 0.01
+        self.locate = 0
+        self.item_effect = 0
 
         self.event_que = []
         self.cur_state = IDLE
@@ -179,14 +192,17 @@ class Mario:
     def draw(self): #그리기
         self.cur_state.draw(self)
         draw_rectangle(*self.get_bb())
-        self.font.draw(self.x+20,self.y+10,f'x={self.x:.2f},y={self.y:.2f}',(255,255,255))
+        self.font.draw(self.x+20,self.y+10,f'x={self.x:.2f},y={self.y:.2f}, speed={self.speed:.2f}',(255,255,255))
 
     def jump(self, j): # 점프 상태 체크
         self.isJump = j
 
+    def hit(self, h):
+        self.ishit = h
+
     def update(self): # 이동 관련
         self.cur_state.do(self)
-        self.speed = 1 + ((self.y-125)/200)
+        self.speed = 0.5 + ((self.y-125)/200) + self.item_effect
         if self.y - 20 > 100 and self.isJump == 0:
             self.y -= 0.5 * self.m * (self.v ** 2) / 2
         if self.event_que:
@@ -200,6 +216,11 @@ class Mario:
 
         if self.isJump > 0:
             JUMP.do(self)
+        if self.ishit > 0:
+            HITBACK.do(self)
+        if self.x == 700:
+            self.locate += self.dir * MOVE_SPEED_PPS * game_framework.frame_time * self.speed
+
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -218,11 +239,19 @@ class Mario:
         return self.x - 20, self.y - 30, self.x + 20, self.y + 10
 
     def handle_collision(self, other, group):
-        if group == 'mario:item':
-            self.speed += 0.5
-        elif group == 'mario:enemy':
+        if group == 'mario:mushroom':
+            self.item_effect += 0.5
+            ctime = time.time()
+            item_time = time.time() - ctime
+            if item_time > 0:
+                self.item_effect -= 0.3
+        if group == 'mario:fire_flower':
+            self.m += 3
+        if group == 'mario:star':
+            self.state = 'invincible'
+        if group == 'mario:enemy':
             pass
-        elif group == 'mario:block':
+        if group == 'mario:block':
             if self.y < other.y:
                 self.y = other.get_bb()[1] - 11
                 self.v = -self.v
@@ -235,6 +264,8 @@ class Mario:
 
     def handle_side_collision(self, other, group):
         if group == 'mario:enemy':
+            if self.state != 'invincible':
+                self.hit(1)
             pass
         if group == 'mario:block':
             if self.x < other.x:
@@ -246,7 +277,6 @@ class Mario:
 
     def handle_floor_collision(self, other, group):
         if group == 'mario:enemy':
-
             self.jump(1)
             pass
         pass

@@ -43,7 +43,9 @@ def enter():
 
     # 충돌대상 정보 등록
 
-    game_world.add_collision_pairs(mario, items, "mario:item")
+    game_world.add_collision_pairs(mario, items[0], "mario:mushroom")
+    game_world.add_collision_pairs(mario, items[1], "mario:fire_flower")
+    game_world.add_collision_pairs(mario, items[2], "mario:star")
     game_world.add_collision_pairs(mario, enemy, "mario:enemy")
     game_world.add_collision_pairs(mario, tiles, "mario:block")
     game_world.add_collision_pairs(items, tiles, "item:wall")
@@ -66,7 +68,6 @@ def update():
             b.handle_collision(a, group)
         if floor_collide(a, b):
             print('Floor_Collision', group)
-
             a.handle_floor_collision(b, group)
             b.handle_floor_collision(a, group)
         elif side_collide(a, b):
@@ -106,10 +107,10 @@ def floor_collide(a,b):
     la, ba, ra, ta = a.get_bb()
     lb, bb, rb, tb = b.get_bb()
 
-    if lb+5 < la < rb-5 or lb+5 < ra < rb-5:
-        if ba > tb:
+    if lb+10 < (la+ra)/2 < rb-10:
+        if ba > tb :
             return False
-        if ta < bb:
+        if ta < bb + 60:
             return False
         return True
 

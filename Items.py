@@ -34,7 +34,7 @@ class Mushroom:
         return self.x - 25, self.y - 30, self.x + 25, self.y + 20
 
     def handle_collision(self, other, group):
-        if group == 'mario:item':
+        if group == 'mario:mushroom':
             game_world.remove_object(self)
 
     def handle_side_collision(self, other, group):
@@ -69,7 +69,7 @@ class Fire_Flower:
         return self.x - 25, self.y - 30, self.x + 25, self.y + 20
 
     def handle_collision(self, other, group):
-        if group == 'mario:item':
+        if group == 'mario:fire_flower':
             game_world.remove_object(self)
             pass
 
@@ -127,7 +127,7 @@ class Star:
         return self.x - 25, self.y - 30, self.x + 25, self.y + 20
 
     def handle_collision(self, other, group):
-        if group == 'mario:item':
+        if group == 'mario:star':
             game_world.remove_object(self)
             pass
 
@@ -142,7 +142,6 @@ class Star:
             self.isJump = 1
             self.v = VELOCITY
             pass
-
 
 def screen_check(obj):
     if obj.x > 1400:
