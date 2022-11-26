@@ -15,11 +15,11 @@ FRAMES_PER_ACTION = 8
 
 class Goomba:
     def __init__(self):
-        self.image = load_image("Monsters.png")
+        self.image = load_image('C:/2DGP_Project/image/Monsters.png')
         self.dir_x = -1
         self.x, self.y = 1400 // 2 , 500  # 초기 위치 (화면 하단 중앙)
         self.frame = 0
-        self.timer = 300
+        self.timer = 100
         self.state = None
 
     def draw(self): #그리기
@@ -52,6 +52,12 @@ class Goomba:
     def handle_side_collision(self, other, group):
         if group == 'enemy:wall':
             self.dir_x = -self.dir_x
+        if group == 'mario:enemy':
+            if other.state == 'invincible':
+                self.dir_x = 0
+                self.state = 'dead'
+            else:
+                pass
             pass
 
     def handle_floor_collision(self, other, group):
@@ -64,7 +70,7 @@ class Goomba:
 
 class KoopaTroopa:
     def __init__(self):
-        self.image = load_image("Monsters.png")
+        self.image = load_image("C:/2DGP_Project/image/Monsters.png")
         self.dir_x = -1
         self.x, self.y = 1400 // 2 - 350,  500   # 초기 위치 (화면 하단 중앙)
         self.pose = 0
@@ -113,7 +119,7 @@ class KoopaTroopa:
 
 class RedTroopa:
     def __init__(self):
-        self.image = load_image("Monsters.png")
+        self.image = load_image("C:/2DGP_Project/image/Monsters.png")
         self.dir_x = -1
         self.x, self.y = 1400 // 2 + 350, 400   # 초기 위치 (화면 하단 중앙)
         self.pose = 0

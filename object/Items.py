@@ -16,7 +16,7 @@ class Mushroom:
     def __init__(self):
         self.x = 1400 // 2 - 300
         self.y = 700 - 20
-        self.image = load_image('Items.png')
+        self.image = load_image('C:/2DGP_Project/image/Items.png')
         self.dir_x = -0.6
 
     def draw(self):
@@ -53,7 +53,7 @@ class Fire_Flower:
     def __init__(self):
         self.x = 1400 // 2
         self.y = 700 - 20
-        self.image = load_image('Items.png')
+        self.image = load_image('C:/2DGP_Project/image/Items.png')
         self.dir_x = -0.6
 
     def draw(self):
@@ -86,7 +86,7 @@ class Fire_Flower:
 
 class Star:
     def __init__(self):
-        self.image = load_image('Items.png')
+        self.image = load_image('C:/2DGP_Project/image/Items.png')
         self.dir_x = 0.7
         self.x, self.y = 1400 // 2 + 300, 700  # 초기 위치 (화면 하단 중앙)
         self.isJump = 0  # 점프 확인

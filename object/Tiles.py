@@ -5,7 +5,7 @@ class Tile:
     def __init__(self):
         self.x, self.y = 770 ,260
         self.dis = 19
-        self.image = load_image('Tiles.png')
+        self.image = load_image('C:/2DGP_Project/image/Tiles.png')
 
     def update(self):
         pass
@@ -33,7 +33,7 @@ class Brick:
     def __init__(self):
         self.x, self.y = 1050, 445
         self.dis = 19
-        self.image = load_image('Tiles.png')
+        self.image = load_image('C:/2DGP_Project/image/Tiles.png')
 
     def update(self):
         pass
@@ -61,7 +61,7 @@ class Item_Box:
     def __init__(self):
         self.x, self.y = 1050 ,260
         self.dis = 19
-        self.image = load_image('Tiles.png')
+        self.image = load_image('C:/2DGP_Project/image/Tiles.png')
 
     def update(self):
         pass
@@ -87,7 +87,7 @@ class Item_Box:
 
 class Pipe:
     def __init__(self):
-        self.image = load_image('Tiles.png')
+        self.image = load_image('C:/2DGP_Project/image/Tiles.png')
         self.dis = 35
         self.x, self.y = 1350, 150
 
@@ -113,7 +113,7 @@ class Pipe:
 
 class Grid:
     def __init__(self):
-        self.image = load_image('Tiles.png')
+        self.image = load_image('C:/2DGP_Project/image/Tiles.png')
         self.x, self.y = 0, 0
 
     def update(self):

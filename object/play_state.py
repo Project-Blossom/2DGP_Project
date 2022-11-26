@@ -92,7 +92,7 @@ def pause():
 def resume():
     pass
 
-def collide(a,b):
+def collide(a,b): # 일반 충돌 판정
     la, ba, ra, ta = a.get_bb()
     lb, bb, rb, tb = b.get_bb()
 
@@ -103,7 +103,7 @@ def collide(a,b):
 
     return True
 
-def floor_collide(a,b):
+def floor_collide(a,b): # 바닥 충돌 판정 (a가 b를 밟았을 때)
     la, ba, ra, ta = a.get_bb()
     lb, bb, rb, tb = b.get_bb()
 
@@ -114,7 +114,7 @@ def floor_collide(a,b):
             return False
         return True
 
-def side_collide(a,b):
+def side_collide(a,b): # 측면 충돌 판정
     la, ba, ra, ta = a.get_bb()
     lb, bb, rb, tb = b.get_bb()
 

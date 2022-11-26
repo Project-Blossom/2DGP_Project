@@ -88,6 +88,7 @@ class RUN:
         elif self.dir == 1:
             self.image.clip_draw(int(self.frame) * 100 + 100, self.pose + 91, 100, 75, self.x, self.y)
             self.pose = -1
+
 class JUMP:
     def enter(self):
         print('JUMP!')
@@ -131,22 +132,43 @@ class JUMP:
             self.image.clip_draw(600, 91, 100, 75, self.x, self.y)
         pass
 
-class STAMP:
-    def do(self):
-        # 역학공식 계산 (F). F = 0.5 * mass * velocity^2.
-        if self.v > 0:  # 속도가 0보다 클 때는 위로 올라감
-            F = -(0.5 * self.m * ((self.v-0.5) ** 2))
-        else:  # 속도가 0이하일 때는 아래로 내려감
-            F = (0.5 * self.m * ((self.v-0.5) ** 2))
+class SPEEDUP:
+    def enter(self):
+        self.item_effect += 0.5
+        ctime = time.time()
 
-        self.y -= F  # 좌표 반영하기
-        # if(self.v > )
-        self.v -= 0.01  # 속도 줄이기
+        pass
+    def do(self): # 아이템 효과 남은시간
 
-        if self.y - 20 < Floor:  # 바닥에 닿았을때 변수 리셋
-            self.y = Floor + 20
-            self.isJump = 0
-            self.v = VELOCITY
+        pass
+    def exit(self):
+        self.item_effect -= 0.5
+        pass
+
+class JUMPUP:
+    def enter(self):
+        self.item_effect += 0.5
+        ctime = time.time()
+
+        pass
+    def do(self): # 아이템 효과 남은시간
+
+        pass
+    def exit(self):
+        self.item_effect -= 0.5
+        pass
+
+class INVINCIBLE:
+    def enter(self):
+        self.item_effect += 0.5
+        ctime = time.time()
+
+        pass
+    def do(self): # 아이템 효과 남은시간
+
+        pass
+    def exit(self):
+        self.item_effect -= 0.5
         pass
 
 class HITBACK:
@@ -167,7 +189,7 @@ next_state = {
 
 class Mario:
     def __init__(self): # 초기화
-        self.image = load_image('SmallMario.png')
+        self.image = load_image('C:/2DGP_Project/image/SmallMario.png')
         # self.bigform = load_image('BigMario.png')
         self.dir, self.face_dir = 0, 1
         self.x, self.y = 1400 // 2 - 350, 25 + 100 # 초기 위치 (화면 하단 중앙)
@@ -176,15 +198,15 @@ class Mario:
         self.isJump = 0 # 점프 확인
         self.v = VELOCITY # 속도
         self.m = MASS # 질량
-        self.life = 1
         self.state = None
         self.speed = 0.5
-        self.font = load_font('ENCR10B.TTF', 16)
+        self.font = load_font('C:/2DGP_Project/font/ENCR10B.TTF', 16)
         self.ishit = 0
         self.gravity = 0.01
         self.locate = 0
         self.item_effect = 0
 
+        self.item_que = []
         self.event_que = []
         self.cur_state = IDLE
         self.cur_state.enter(self, None)
@@ -214,16 +236,22 @@ class Mario:
                 print(f'ERROR: State {self.cur_state.__name__}    Event {event_name[event]}')
             self.cur_state.enter(self, event)
 
-        if self.isJump > 0:
+        if self.isJump > 0: # 점프
             JUMP.do(self)
-        if self.ishit > 0:
+        if self.ishit > 0:  # 적과 측면충돌했을때
             HITBACK.do(self)
         if self.x == 700:
             self.locate += self.dir * MOVE_SPEED_PPS * game_framework.frame_time * self.speed
+        if self.state == 'speed_up':
+            pass
+
 
 
     def add_event(self, event):
         self.event_que.insert(0, event)
+
+    def add_item(self, item):
+        self.item_que.insert(0, item)
 
     def handle_events(self, event):
         if (event.type, event.key) in key_event_table:
@@ -240,6 +268,7 @@ class Mario:
 
     def handle_collision(self, other, group):
         if group == 'mario:mushroom':
+            self.state = 'speed_up'
             self.item_effect += 0.5
             ctime = time.time()
             item_time = time.time() - ctime

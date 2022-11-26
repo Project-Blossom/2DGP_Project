@@ -8,7 +8,7 @@ image = None
 
 def enter():
     global image
-    image = load_image('title.png')
+    image = load_image('2DGP_Project/image/title.png')
     pass
 
 def exit():
