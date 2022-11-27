@@ -7,12 +7,7 @@ from Items import Mushroom, Fire_Flower, Star
 from Mario import Mario
 from Enemy import Goomba, KoopaTroopa, RedTroopa
 from Tiles import Tile, Item_Box, Pipe, Brick
-
-mario = None
-enemy = []
-items = []
-back = None
-tiles = []
+import server
 
 def handle_events():
     events = get_events()
@@ -22,36 +17,35 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
             game_framework.quit()
         else:
-            mario.handle_events(event)
+            server.mario.handle_events(event)
 
 # 초기화
 def enter():
-    global mario, items, enemy, back, tiles
-    mario = Mario()
-    items = [Mushroom(), Fire_Flower(), Star()]
-    enemy = [Goomba(), KoopaTroopa(), RedTroopa()]
-    back = stage1()
-    tiles = [Tile(), Brick(),Item_Box(), Pipe()]
-    game_world.add_object(back, 0)
-    game_world.add_object(mario, 1)
-    for item in items:
+    server.mario = Mario()
+    server.items = [Mushroom(), Fire_Flower(), Star()]
+    server.enemy = [Goomba(), KoopaTroopa(), RedTroopa()]
+    server.back = stage1()
+    server.tiles = [Tile(), Brick(),Item_Box(), Pipe()]
+    game_world.add_object(server.back, 0)
+    game_world.add_object(server.mario, 1)
+    for item in server.items:
         game_world.add_object(item, 1)
-    for mob in enemy:
+    for mob in server.enemy:
         game_world.add_object(mob, 1)
-    for tile in tiles:
+    for tile in server.tiles:
         game_world.add_object(tile, 1)
 
     # 충돌대상 정보 등록
 
-    game_world.add_collision_pairs(mario, items[0], "mario:mushroom")
-    game_world.add_collision_pairs(mario, items[1], "mario:fire_flower")
-    game_world.add_collision_pairs(mario, items[2], "mario:star")
-    game_world.add_collision_pairs(mario, enemy, "mario:enemy")
-    game_world.add_collision_pairs(mario, tiles, "mario:block")
-    game_world.add_collision_pairs(items, tiles, "item:wall")
-    game_world.add_collision_pairs(enemy, tiles, "enemy:wall")
-    game_world.add_collision_pairs(items, tiles, "item:floor")
-    game_world.add_collision_pairs(enemy, tiles, "enemy:floor")
+    game_world.add_collision_pairs(server.mario, server.items[0], "mario:mushroom")
+    game_world.add_collision_pairs(server.mario, server.items[1], "mario:fire_flower")
+    game_world.add_collision_pairs(server.mario, server.items[2], "mario:star")
+    game_world.add_collision_pairs(server.mario, server.enemy, "mario:enemy")
+    game_world.add_collision_pairs(server.mario, server.tiles, "mario:block")
+    game_world.add_collision_pairs(server.items, server.tiles, "item:wall")
+    game_world.add_collision_pairs(server.enemy, server.tiles, "enemy:wall")
+    game_world.add_collision_pairs(server.items, server.tiles, "item:floor")
+    game_world.add_collision_pairs(server.enemy, server.tiles, "enemy:floor")
 
 # 종료
 def exit():
