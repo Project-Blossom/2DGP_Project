@@ -138,7 +138,7 @@ class Star:
 
     def handle_floor_collision(self, other, group):
         if group == 'item:floor':
-            self.y = other.y + other.dis + 1 + 25
+            self.y = other.y + other.h/2 + 1 + 25
             self.isJump = 1
             self.v = VELOCITY
             pass

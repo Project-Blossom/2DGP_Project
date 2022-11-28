@@ -62,7 +62,7 @@ class Goomba:
 
     def handle_floor_collision(self, other, group):
         if group == 'enemy:floor':
-            self.y = other.y + other.dis + 1 + 25
+            self.y = other.y + other.h/2 + 1 + 25
         if group == 'mario:enemy':
             self.dir_x = 0
             self.state = 'dead'
@@ -108,7 +108,7 @@ class KoopaTroopa:
 
     def handle_floor_collision(self, other, group):
         if group == 'enemy:floor':
-            self.y = other.y + other.dis + 1 + 25
+            self.y = other.y + other.h/2 + 1 + 25
         if group == 'mario:enemy':
             if self.state == 'STAMPED':
                 self.dir_x = 2
@@ -157,7 +157,7 @@ class RedTroopa:
 
     def handle_floor_collision(self, other, group):
         if group == 'enemy:floor':
-            self.y = other.y + other.dis + 1 + 25
+            self.y = other.y + other.h/2 + 1 + 25
         if group == 'mario:enemy':
             if self.state == 'STAMPED':
                 self.dir_x = 2

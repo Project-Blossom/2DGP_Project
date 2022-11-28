@@ -1,7 +1,7 @@
 from pico2d import *
 import game_framework
 import time
-
+import server
 
 Floor = 100
 VELOCITY = 1 # 속도
@@ -54,10 +54,13 @@ class IDLE:
 
     @staticmethod
     def draw(self):
+        sx, sy = self.x - server.back.window_left, server.mario.y
         if self.dir == 0:
             self.pose += 92
-            self.image.clip_draw(0, self.pose, 100, 75, self.x, self.y)
+            self.image.clip_draw(0, self.pose, 100, 75, sx, sy)
             self.pose -= 92
+        self.font.draw(self.x + 20, self.y + 10, f'x={self.x:.2f},y={self.y:.2f}, speed={self.speed:.2f}',
+                       (255, 255, 255))
 
 class RUN:
     def enter(self, event):
@@ -79,15 +82,18 @@ class RUN:
     def do(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time * self.speed) % 3
         self.x += self.dir * MOVE_SPEED_PPS * game_framework.frame_time * self.speed
-        self.x = clamp(0, self.x, 1400)
+        self.x = clamp(1, self.x, 4850*2)
 
     def draw(self):
+        sx, sy = self.x - server.back.window_left, server.mario.y
         if self.dir == -1:
-            self.image.clip_draw(int(self.frame) * 100 + 1000, self.pose + 12, 100, 75, self.x, self.y)
+            self.image.clip_draw(int(self.frame) * 100 + 1000, self.pose + 12, 100, 75, sx, sy)
             self.pose = 320
         elif self.dir == 1:
-            self.image.clip_draw(int(self.frame) * 100 + 100, self.pose + 91, 100, 75, self.x, self.y)
+            self.image.clip_draw(int(self.frame) * 100 + 100, self.pose + 91, 100, 75, sx, sy)
             self.pose = -1
+        self.font.draw(self.x + 20, self.y + 10, f'x={self.x:.2f},y={self.y:.2f}, speed={self.speed:.2f}',
+                       (255, 255, 255))
 
 class JUMP:
     def enter(self):
@@ -214,7 +220,7 @@ class Mario:
     def draw(self): #그리기
         self.cur_state.draw(self)
         draw_rectangle(*self.get_bb())
-        self.font.draw(self.x+20,self.y+10,f'x={self.x:.2f},y={self.y:.2f}, speed={self.speed:.2f}',(255,255,255))
+
 
     def jump(self, j): # 점프 상태 체크
         self.isJump = j
@@ -280,14 +286,7 @@ class Mario:
             self.state = 'invincible'
         if group == 'mario:enemy':
             pass
-        if group == 'mario:block':
-            if self.y < other.y:
-                self.y = other.get_bb()[1] - 11
-                self.v = -self.v
-            if self.y > other.y:
-                self.y = other.get_bb()[3] + 31
-                self.isJump = 0
-                self.v = VELOCITY
+
             pass
         pass
 
@@ -307,6 +306,14 @@ class Mario:
     def handle_floor_collision(self, other, group):
         if group == 'mario:enemy':
             self.jump(1)
+        if group == 'mario:block':
+            if self.y < other.y:
+                self.y = other.get_bb()[1] - 11
+                self.v = -self.v
+            if self.y > other.y:
+                self.y = other.get_bb()[3] + 31
+                self.isJump = 0
+                self.v = VELOCITY
             pass
         pass
 

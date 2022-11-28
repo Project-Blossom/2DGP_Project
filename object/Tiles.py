@@ -1,10 +1,10 @@
 from pico2d import *
 import game_world
-
+import server
 class Tile:
     def __init__(self):
-        self.x, self.y = 770 ,260
-        self.dis = 19
+        self.x, self.y = 770 ,255
+        self.w, self.h = 50, 50
         self.image = load_image('C:/2DGP_Project/image/Tiles.png')
 
     def update(self):
@@ -15,7 +15,7 @@ class Tile:
         pass
 
     def get_bb(self):
-        return self.x - 24, self.y - 24, self.x + 24, self.y + 19
+        return self.x-(self.w/2), self.y-(self.h/2), self.x+(self.w/2),self.y+(self.h/2)
 
     def handle_collision(self, other, group):
         if group == 'item:wall':
@@ -31,8 +31,8 @@ class Tile:
 
 class Brick:
     def __init__(self):
-        self.x, self.y = 1050, 445
-        self.dis = 19
+        self.x, self.y = 1050, 440
+        self.w, self.h = 50, 50
         self.image = load_image('C:/2DGP_Project/image/Tiles.png')
 
     def update(self):
@@ -43,7 +43,7 @@ class Brick:
         pass
 
     def get_bb(self):
-        return self.x - 24, self.y - 24, self.x + 24, self.y + 19
+        return self.x-(self.w/2), self.y-(self.h/2), self.x+(self.w/2),self.y+(self.h/2)
 
     def handle_collision(self, other, group):
         if group == 'item:wall':
@@ -59,8 +59,8 @@ class Brick:
 
 class Item_Box:
     def __init__(self):
-        self.x, self.y = 1050 ,260
-        self.dis = 19
+        self.x, self.y = 1050 ,255
+        self.w, self.h = 240, 50
         self.image = load_image('C:/2DGP_Project/image/Tiles.png')
 
     def update(self):
@@ -71,7 +71,7 @@ class Item_Box:
         pass
 
     def get_bb(self):
-        return self.x - 119, self.y - 24, self.x + 119, self.y + 19
+        return self.x-(self.w/2), self.y-(self.h/2), self.x+(self.w/2),self.y+(self.h/2)
 
     def handle_collision(self, other, group):
         if group == 'mario:item':
@@ -88,8 +88,9 @@ class Item_Box:
 class Pipe:
     def __init__(self):
         self.image = load_image('C:/2DGP_Project/image/Tiles.png')
+        self.w, self.h = 90, 100
         self.dis = 35
-        self.x, self.y = 1350, 150
+        self.x, self.y = 1355, 135
 
     def update(self):
         pass
@@ -98,7 +99,7 @@ class Pipe:
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return self.x-40, self.y-65, self.x+50,self.y+35
+        return self.x-(self.w/2), self.y-(self.h/2), self.x+(self.w/2),self.y+(self.h/2)
 
     def handle_collision(self, other, group):
         pass
@@ -117,11 +118,12 @@ class Grid:
         self.x, self.y = 0, 0
 
     def update(self):
+        self.x -= server.mario.x
         pass
 
     def draw(self):
-        pass
         # for i in range(30):
         #     for j in range(60):
         #         draw_rectangle(self.x + j * 46,self.y + i*46,self.x + (j+1) * 46,self.x + (i+1) * 46)
+        pass
 

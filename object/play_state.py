@@ -71,6 +71,7 @@ def update():
 
 
 
+
 def draw_world():
     for game_object in game_world.all_objects():
         game_object.draw()
@@ -101,10 +102,10 @@ def floor_collide(a,b): # 바닥 충돌 판정 (a가 b를 밟았을 때)
     la, ba, ra, ta = a.get_bb()
     lb, bb, rb, tb = b.get_bb()
 
-    if lb+10 < (la+ra)/2 < rb-10:
+    if lb < (la + ra) / 2 < rb:
         if ba > tb :
             return False
-        if ta < bb + 60:
+        if ta < bb :
             return False
         return True
 
@@ -112,7 +113,7 @@ def side_collide(a,b): # 측면 충돌 판정
     la, ba, ra, ta = a.get_bb()
     lb, bb, rb, tb = b.get_bb()
 
-    if bb+1 < ta < tb-1 or bb+1 < ba < tb-1:
+    if bb < (ta + ba) / 2 < tb:
         if la > rb:
             return False
         if ra < lb:
