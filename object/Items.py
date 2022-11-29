@@ -2,7 +2,7 @@ from pico2d import *
 import game_world
 
 import game_framework
-
+import server
 VELOCITY = 1  # 속도
 MASS = 1000  # 질량
 
@@ -13,14 +13,15 @@ MOVE_SPEED_MPS = (MOVE_SPEED_MPM / 60.0)
 MOVE_SPEED_PPS = (MOVE_SPEED_MPS * PIXEL_PER_METER)
 
 class Mushroom:
-    def __init__(self):
-        self.x = 1400 // 2 - 300
+    def __init__(self, x=0, y=0, size=1):
+        self.x = 1400 // 2 - 300 # 1400//2-300
         self.y = 700 - 20
         self.image = load_image('C:/2DGP_Project/image/Items.png')
         self.dir_x = -0.6
 
     def draw(self):
-        self.image.clip_draw(0, 0, 80, 60, self.x, self.y)
+        sx, sy = self.x - server.back.window_left, self.y
+        self.image.clip_draw(0, 0, 80, 60, sx, sy)
         draw_rectangle(*self.get_bb())
 
     def update(self):
@@ -57,7 +58,8 @@ class Fire_Flower:
         self.dir_x = -0.6
 
     def draw(self):
-        self.image.clip_draw(190, 0, 100, 60, self.x, self.y)
+        sx, sy = self.x - server.back.window_left, self.y
+        self.image.clip_draw(190, 0, 100, 60, sx, sy)
         draw_rectangle(*self.get_bb())
 
     def update(self):
@@ -94,7 +96,8 @@ class Star:
         self.m = MASS  # 질량
 
     def draw(self):
-        self.image.clip_draw(395, 0, 110, 60, self.x, self.y)
+        sx, sy = self.x - server.back.window_left, self.y
+        self.image.clip_draw(395, 0, 110, 60, sx, sy)
         draw_rectangle(*self.get_bb())
 
     def update(self):

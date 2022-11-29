@@ -59,7 +59,7 @@ class IDLE:
             self.pose += 92
             self.image.clip_draw(0, self.pose, 100, 75, sx, sy)
             self.pose -= 92
-        self.font.draw(self.x + 20, self.y + 10, f'x={self.x:.2f},y={self.y:.2f}, speed={self.speed:.2f}',
+        self.font.draw(sx + 20, sy + 10, f'x={self.x:.2f},y={self.y:.2f}, speed={self.speed:.2f}',
                        (255, 255, 255))
 
 class RUN:
@@ -92,7 +92,7 @@ class RUN:
         elif self.dir == 1:
             self.image.clip_draw(int(self.frame) * 100 + 100, self.pose + 91, 100, 75, sx, sy)
             self.pose = -1
-        self.font.draw(self.x + 20, self.y + 10, f'x={self.x:.2f},y={self.y:.2f}, speed={self.speed:.2f}',
+        self.font.draw(sx + 20, sy + 10, f'x={self.x:.2f},y={self.y:.2f}, speed={self.speed:.2f}',
                        (255, 255, 255))
 
 class JUMP:

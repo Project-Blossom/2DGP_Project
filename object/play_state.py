@@ -6,7 +6,7 @@ from Background import stage1
 from Items import Mushroom, Fire_Flower, Star
 from Mario import Mario
 from Enemy import Goomba, KoopaTroopa, RedTroopa
-from Tiles import Tile, Item_Box, Pipe, Brick
+from Tiles import ItemBox, Pipe, Brick
 import server
 
 def handle_events():
@@ -25,7 +25,7 @@ def enter():
     server.items = [Mushroom(), Fire_Flower(), Star()]
     server.enemy = [Goomba(), KoopaTroopa(), RedTroopa()]
     server.back = stage1()
-    server.tiles = [Tile(), Brick(),Item_Box(), Pipe()]
+    server.tiles = [Brick(),ItemBox(), Pipe()]
     game_world.add_object(server.back, 0)
     game_world.add_object(server.mario, 1)
     for item in server.items:
@@ -34,6 +34,27 @@ def enter():
         game_world.add_object(mob, 1)
     for tile in server.tiles:
         game_world.add_object(tile, 1)
+
+    with open("brick_map.json") as f:
+        brick_list = json.load(f)
+        for o in brick_list:
+            brick = Brick(o['x'], o['y'], o['w'])
+            game_world.add_object(brick, 1)
+            game_world.add_collision_pairs(server.mario, brick, 'mario:block')
+
+    with open("item_box_map.json") as f:
+        item_box_list = json.load(f)
+        for o in item_box_list:
+            item_box = ItemBox(o['x'], o['y'])
+            game_world.add_object(item_box, 1)
+            game_world.add_collision_pairs(server.mario, item_box, 'mario:block')
+
+    with open("pipe_map.json") as f:
+        pipe_list = json.load(f)
+        for o in pipe_list:
+            pipe = Pipe(o['x'], o['y'], o['h'])
+            game_world.add_object(pipe, 1)
+            game_world.add_collision_pairs(server.mario, pipe, 'mario:block')
 
     # 충돌대상 정보 등록
 

@@ -2,6 +2,7 @@ from pico2d import *
 # import maingame as screen
 import game_framework
 import game_world
+import server
 
 PIXEL_PER_METER = (10.0/0.3)
 MOVE_SPEED_KMPH = 15.0
@@ -23,10 +24,11 @@ class Goomba:
         self.state = None
 
     def draw(self): #그리기
+        sx, sy = self.x - server.back.window_left, self.y
         if self.state == 'dead':
-            self.image.clip_draw(2 * 64 + 67, 785, 64, 50, self.x, self.y)
+            self.image.clip_draw(2 * 64 + 67, 785, 64, 50, sx, sy)
         else:
-            self.image.clip_draw(int(self.frame) * 64 + 67, 785, 64, 50, self.x, self.y)
+            self.image.clip_draw(int(self.frame) * 64 + 67, 785, 64, 50, sx, sy)
         draw_rectangle(*self.get_bb())
 
 
@@ -78,13 +80,14 @@ class KoopaTroopa:
         self.state = None
 
     def draw(self): #그리기
+        sx, sy = self.x - server.back.window_left, self.y
         if self.state == None:
             if self.dir_x == 1: # 오른쪽을 향할 때
-                self.image.clip_draw(int(self.frame) * 64 + 67, 525, 64, 75, self.x, self.y)
+                self.image.clip_draw(int(self.frame) * 64 + 67, 525, 64, 75, sx, sy)
             elif self.dir_x == -1: # 왼쪽을 향할때
-                self.image.clip_composite_draw(int(self.frame) * 64 + 67, 525, 64, 75, 0,'h',self.x, self.y, 64, 75)
+                self.image.clip_composite_draw(int(self.frame) * 64 + 67, 525, 64, 75, 0,'h',sx, sy, 64, 75)
         else:
-            self.image.clip_draw(int(self.frame) * 64 + 67, 450, 64, 75, self.x, self.y)
+            self.image.clip_draw(int(self.frame) * 64 + 67, 450, 64, 75, sx, sy)
         draw_rectangle(*self.get_bb())
 
     def update(self): # 이동 관련
@@ -127,13 +130,14 @@ class RedTroopa:
         self.state = None
 
     def draw(self): #그리기
+        sx, sy = self.x - server.back.window_left, self.y
         if self.state == None:
             if self.dir_x == 1: # 오른쪽을 향할 때
-                self.image.clip_draw(int(self.frame) * 64 + 67*6-10, 525, 64, 75, self.x, self.y)
+                self.image.clip_draw(int(self.frame) * 64 + 67*6-10, 525, 64, 75, sx, sy)
             elif self.dir_x == -1: # 왼쪽을 향할때
-                self.image.clip_composite_draw(int(self.frame) * 64 + 67*6, 525, 64, 75, 0,'h',self.x, self.y, 64, 75)
+                self.image.clip_composite_draw(int(self.frame) * 64 + 67*6, 525, 64, 75, 0,'h',sx, sy, 64, 75)
         else:
-            self.image.clip_draw(int(self.frame) * 64 + 67 * 6 - 10, 450, 64, 75, self.x, self.y)
+            self.image.clip_draw(int(self.frame) * 64 + 67 * 6 - 10, 450, 64, 75, sx, sy)
         draw_rectangle(*self.get_bb())
 
     def update(self): # 이동 관련

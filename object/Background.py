@@ -9,12 +9,6 @@ class stage1:
         self.w = 4850 * 2
 
     def draw(self):
-        # self.image.draw(4900 - 1400 - 700, 350)
-        # self.stage1.clip_draw(0 , 0, 1400, 700, 700, 350)
-        # self.stage1.clip_draw_to_origin(
-        #     self.window_left, 0,
-        #     self.canvas_width, self.canvas_height,
-        #     0, 0)
 
         self.window_left = clamp(0,
                                  int(server.mario.x) - self.canvas_width // 2,
