@@ -5,10 +5,10 @@ import server
 
 Floor = 100
 VELOCITY = 1 # 속도
-MASS = 12 # 질량
+MASS = 23 # 질량
 
-PIXEL_PER_METER = (10.0/0.3)
-MOVE_SPEED_KMPH = 40.0
+PIXEL_PER_METER = (50.0/1.0) # 50 pixel 1m
+MOVE_SPEED_KMPH = 10.0
 MOVE_SPEED_MPM = (MOVE_SPEED_KMPH * 1000.0 / 60.0)
 MOVE_SPEED_MPS = (MOVE_SPEED_MPM / 60.0)
 MOVE_SPEED_PPS = (MOVE_SPEED_MPS * PIXEL_PER_METER)
@@ -119,9 +119,9 @@ class JUMP:
             else: # 속도가 0보다 작을 때는 아래로 내려감
                 F = (0.5 * self.m * (self.v **2))
 
-            self.y -= F # 좌표 반영하기
+            self.y -= F * MOVE_SPEED_PPS * game_framework.frame_time # 좌표 반영하기
             # if(self.v > )
-            self.v -= self.gravity # 속도 줄이기
+            self.v -= self.gravity
 
             if self.y-20 < Floor: # 바닥에 닿았을때 변수 리셋
                 self.y = Floor + 20
@@ -184,7 +184,7 @@ class HITBACK:
                 self.v = VELOCITY
                 self.ishit = 0
             if self.v > 0:
-                F = (1.5 * self.m * (self.v ** 2))
+                F = (1.5 * self.m * (self.v ** 2)) * MOVE_SPEED_PPS * game_framework.frame_time
             self.x -= F
             self.v -= 0.01
 
@@ -198,18 +198,17 @@ class Mario:
         self.image = load_image('C:/2DGP_Project/image/SmallMario.png')
         # self.bigform = load_image('BigMario.png')
         self.dir, self.face_dir = 0, 1
-        self.x, self.y = 1400 // 2 - 350, 25 + 100 # 초기 위치 (화면 하단 중앙)
+        self.x, self.y = 6900, 50 + 100 # 초기 위치
         self.pose = 0
         self.frame = 0
         self.isJump = 0 # 점프 확인
         self.v = VELOCITY # 속도
         self.m = MASS # 질량
         self.state = None
-        self.speed = 0.5
+        self.speed = 0
         self.font = load_font('C:/2DGP_Project/font/ENCR10B.TTF', 16)
         self.ishit = 0
-        self.gravity = 0.01
-        self.locate = 0
+        self.gravity = 0.05
         self.item_effect = 0
 
         self.item_que = []
@@ -230,9 +229,10 @@ class Mario:
 
     def update(self): # 이동 관련
         self.cur_state.do(self)
-        self.speed = 0.5 + ((self.y-125)/200) + self.item_effect
-        if self.y - 20 > 100 and self.isJump == 0:
-            self.y -= 0.5 * self.m * (self.v ** 2) / 2
+        self.speed = 0.5 + ((self.y-125)/150) + self.item_effect
+        if self.y - 20 > Floor and self.isJump == 0:
+            self.y -= 0.5 * self.m * (self.v ** 2) / 2 * MOVE_SPEED_PPS * game_framework.frame_time
+        clamp(120,self.y, 900)
         if self.event_que:
             event = self.event_que.pop()
             self.cur_state.exit(self, event)
@@ -246,8 +246,6 @@ class Mario:
             JUMP.do(self)
         if self.ishit > 0:  # 적과 측면충돌했을때
             HITBACK.do(self)
-        if self.x == 700:
-            self.locate += self.dir * MOVE_SPEED_PPS * game_framework.frame_time * self.speed
         if self.state == 'speed_up':
             pass
 

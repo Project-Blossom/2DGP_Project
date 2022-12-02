@@ -4,8 +4,8 @@ import game_framework
 import game_world
 import server
 
-PIXEL_PER_METER = (10.0/0.3)
-MOVE_SPEED_KMPH = 15.0
+PIXEL_PER_METER = (50.0/1.0) # 50 pixel 1m
+MOVE_SPEED_KMPH = 10.0
 MOVE_SPEED_MPM = (MOVE_SPEED_KMPH * 1000.0 / 60.0)
 MOVE_SPEED_MPS = (MOVE_SPEED_MPM / 60.0)
 MOVE_SPEED_PPS = (MOVE_SPEED_MPS * PIXEL_PER_METER)
@@ -32,10 +32,10 @@ class Goomba:
         draw_rectangle(*self.get_bb())
 
 
-    def update(self): # 이동 관련
+    def update(self):
         screen_check(self)
         if self.y-20 > 100:
-            self.y -= 1
+            self.y -= 1 * MOVE_SPEED_PPS * game_framework.frame_time
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
         self.x += self.dir_x * MOVE_SPEED_PPS * game_framework.frame_time
         if self.state == 'dead':
@@ -90,10 +90,10 @@ class KoopaTroopa:
             self.image.clip_draw(int(self.frame) * 64 + 67, 450, 64, 75, sx, sy)
         draw_rectangle(*self.get_bb())
 
-    def update(self): # 이동 관련
+    def update(self):
         screen_check(self)
         if self.y-20 > 100:
-            self.y -= 1
+            self.y -= 1 * MOVE_SPEED_PPS * game_framework.frame_time
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
         self.x += self.dir_x * MOVE_SPEED_PPS * game_framework.frame_time
 
@@ -140,10 +140,10 @@ class RedTroopa:
             self.image.clip_draw(int(self.frame) * 64 + 67 * 6 - 10, 450, 64, 75, sx, sy)
         draw_rectangle(*self.get_bb())
 
-    def update(self): # 이동 관련
+    def update(self):
         screen_check(self)
         if self.y-20 > 100:
-            self.y -= 1
+            self.y -= 1 * MOVE_SPEED_PPS * game_framework.frame_time
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
         self.x += self.dir_x * MOVE_SPEED_PPS * game_framework.frame_time
 
