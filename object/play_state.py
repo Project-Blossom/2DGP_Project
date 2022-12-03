@@ -6,8 +6,9 @@ from Background import stage1
 from Items import Mushroom, Fire_Flower, Star
 from Mario import Mario
 from Enemy import Goomba, KoopaTroopa, RedTroopa
-from Tiles import ItemBox, Pipe, Brick
+from Tiles import Pipe, Brick
 import server
+import time
 
 def handle_events():
     events = get_events()
@@ -66,6 +67,14 @@ def enter():
             game_world.add_object(fire_flower, 1)
             game_world.add_collision_pairs(server.mario, fire_flower, 'mario:fire_flower')
             server.items.append(fire_flower)
+
+    with open("C:/2DGP_Project/object_map/goomba_map.json") as f:
+        goomba_list = json.load(f)
+        for o in goomba_list:
+            goomba = Goomba(o['x'], o['y'])
+            game_world.add_object(goomba, 1)
+            game_world.add_collision_pairs(server.mario, goomba, 'mario:enemy')
+            server.enemy.append(goomba)
 
 
     # 충돌대상 정보 등록

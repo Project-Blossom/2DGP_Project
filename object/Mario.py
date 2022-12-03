@@ -5,7 +5,7 @@ import server
 
 Floor = 100
 VELOCITY = 1 # 속도
-MASS = 23 # 질량
+MASS = 20 # 질량
 
 PIXEL_PER_METER = (50.0/1.0) # 50 pixel 1m
 MOVE_SPEED_KMPH = 10.0
@@ -184,7 +184,7 @@ class HITBACK:
                 self.v = VELOCITY
                 self.ishit = 0
             if self.v > 0:
-                F = (1.5 * self.m * (self.v ** 2)) * MOVE_SPEED_PPS * game_framework.frame_time
+                F = (0.2 * self.m * (self.v ** 2)) * MOVE_SPEED_PPS * game_framework.frame_time
             self.x -= F
             self.v -= 0.01
 
@@ -198,7 +198,7 @@ class Mario:
         self.image = load_image('C:/2DGP_Project/image/SmallMario.png')
         # self.bigform = load_image('BigMario.png')
         self.dir, self.face_dir = 0, 1
-        self.x, self.y = 6900, 50 + 100 # 초기 위치
+        self.x, self.y = 350, 50 + 200 # 초기 위치
         self.pose = 0
         self.frame = 0
         self.isJump = 0 # 점프 확인
@@ -230,9 +230,10 @@ class Mario:
     def update(self): # 이동 관련
         self.cur_state.do(self)
         self.speed = 0.5 + ((self.y-125)/150) + self.item_effect
-        if self.y - 20 > Floor and self.isJump == 0:
+        if 3230 < self.x < 3300 or (self.y - 20 > Floor and self.isJump == 0):
             self.y -= 0.5 * self.m * (self.v ** 2) / 2 * MOVE_SPEED_PPS * game_framework.frame_time
-        clamp(120,self.y, 900)
+        if self.y < 10:
+            self.x, self.y =350, 250
         if self.event_que:
             event = self.event_que.pop()
             self.cur_state.exit(self, event)

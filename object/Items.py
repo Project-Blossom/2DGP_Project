@@ -3,6 +3,7 @@ import game_world
 
 import game_framework
 import server
+
 VELOCITY = 1  # 속도
 MASS = 20  # 질량
 
