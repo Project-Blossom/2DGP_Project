@@ -58,8 +58,7 @@ class IDLE:
             self.pose += 92
             self.image.clip_draw(0, self.pose, 100, 75, sx, sy)
             self.pose -= 92
-        self.font.draw(sx + 20, sy + 10, f'x={self.x:.2f},y={self.y:.2f}, speed={self.speed:.2f}',
-                       (255, 255, 255))
+        # self.font.draw(sx + 20, sy + 10, f'x={self.x:.2f},y={self.y:.2f}, speed={self.speed:.2f}',(255, 255, 255))
 
 class RUN:
     def enter(self, event):
@@ -91,8 +90,7 @@ class RUN:
         elif self.dir == 1:
             self.image.clip_draw(int(self.frame) * 100 + 100, self.pose + 91, 100, 75, sx, sy)
             self.pose = -1
-        self.font.draw(sx + 20, sy + 10, f'x={self.x:.2f},y={self.y:.2f}, speed={self.speed:.2f}',
-                       (255, 255, 255))
+        # self.font.draw(sx + 20, sy + 10, f'x={self.x:.2f},y={self.y:.2f}, speed={self.speed:.2f}',(255, 255, 255))
 
 class JUMP:
     def enter(self):
@@ -192,7 +190,7 @@ class Mario:
 
     def draw(self): #그리기
         self.cur_state.draw(self)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
 
     def jump(self, j): # 점프 상태 체크
