@@ -15,7 +15,7 @@
 
 <div class="node">
   <a name="maingame.py"></a>
-  <a target="code" href="///C:/2DGP_Project/object/maingame.py" type="text/plain"><tt>maingame.py</tt></a>
+  <a target="code" href="///C:/2DGP_Project/process/maingame.py" type="text/plain"><tt>maingame.py</tt></a>
 <span class="moduletype">Script</span>  <div class="import">
 imports:
     <a href="#_collections_abc">_collections_abc</a>
@@ -492,7 +492,7 @@ imported by:
   <a target="code" href="" type="text/plain"><tt>'org.python'</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
-    <a href="#copy">copy</a>
+    <a href="#pickle">pickle</a>
  &#8226;   <a href="#xml.sax">xml.sax</a>
 
   </div>
@@ -718,7 +718,7 @@ imported by:
 
 <div class="node">
   <a name="Background"></a>
-  <a target="code" href="///C:/2DGP_Project/object/Background.py" type="text/plain"><tt>Background</tt></a>
+  <a target="code" href="///C:/2DGP_Project/process/Background.py" type="text/plain"><tt>Background</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#Mario">Mario</a>
@@ -729,6 +729,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#play_state">play_state</a>
+ &#8226;   <a href="#title_state">title_state</a>
 
   </div>
 
@@ -747,7 +748,7 @@ imported by:
 
 <div class="node">
   <a name="Enemy"></a>
-  <a target="code" href="///C:/2DGP_Project/object/Enemy.py" type="text/plain"><tt>Enemy</tt></a>
+  <a target="code" href="///C:/2DGP_Project/process/Enemy.py" type="text/plain"><tt>Enemy</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#game_framework">game_framework</a>
@@ -788,13 +789,15 @@ imported by:
 
 <div class="node">
   <a name="Items"></a>
-  <a target="code" href="///C:/2DGP_Project/object/Items.py" type="text/plain"><tt>Items</tt></a>
+  <a target="code" href="///C:/2DGP_Project/process/Items.py" type="text/plain"><tt>Items</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#game_framework">game_framework</a>
  &#8226;   <a href="#game_world">game_world</a>
+ &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#pico2d">pico2d</a>
  &#8226;   <a href="#server">server</a>
+ &#8226;   <a href="#sys">sys</a>
 
   </div>
   <div class="import">
@@ -807,13 +810,12 @@ imported by:
 
 <div class="node">
   <a name="Mario"></a>
-  <a target="code" href="///C:/2DGP_Project/object/Mario.py" type="text/plain"><tt>Mario</tt></a>
+  <a target="code" href="///C:/2DGP_Project/process/Mario.py" type="text/plain"><tt>Mario</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#game_framework">game_framework</a>
  &#8226;   <a href="#pico2d">pico2d</a>
  &#8226;   <a href="#server">server</a>
- &#8226;   <a href="#time">time</a>
 
   </div>
   <div class="import">
@@ -2504,12 +2506,32 @@ imported by:
 
 <div class="node">
   <a name="Tiles"></a>
-  <a target="code" href="///C:/2DGP_Project/object/Tiles.py" type="text/plain"><tt>Tiles</tt></a>
+  <a target="code" href="///C:/2DGP_Project/process/Tiles.py" type="text/plain"><tt>Tiles</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#game_world">game_world</a>
+    <a href="#clear_state">clear_state</a>
+ &#8226;   <a href="#game_framework">game_framework</a>
+ &#8226;   <a href="#game_world">game_world</a>
  &#8226;   <a href="#pico2d">pico2d</a>
  &#8226;   <a href="#server">server</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#play_state">play_state</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="Timer"></a>
+  <a target="code" href="///C:/2DGP_Project/process/Timer.py" type="text/plain"><tt>Timer</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#pickle">pickle</a>
+ &#8226;   <a href="#pico2d">pico2d</a>
+ &#8226;   <a href="#time">time</a>
 
   </div>
   <div class="import">
@@ -5137,6 +5159,29 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="clear_state"></a>
+  <a target="code" href="///C:/2DGP_Project/process/clear_state.py" type="text/plain"><tt>clear_state</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#game_framework">game_framework</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#pickle">pickle</a>
+ &#8226;   <a href="#pico2d">pico2d</a>
+ &#8226;   <a href="#play_state">play_state</a>
+ &#8226;   <a href="#server">server</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#title_state">title_state</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#Tiles">Tiles</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="cmd"></a>
   <a target="code" href="///C:/python/lib/cmd.py" type="text/plain"><tt>cmd</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
@@ -5913,8 +5958,8 @@ imported by:
   <a target="code" href="///C:/python/lib/copy.py" type="text/plain"><tt>copy</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#'org.python'">'org.python'</a>
- &#8226;   <a href="#copyreg">copyreg</a>
+    <a href="#copyreg">copyreg</a>
+ &#8226;   <a href="#org">org</a>
  &#8226;   <a href="#types">types</a>
  &#8226;   <a href="#weakref">weakref</a>
 
@@ -10930,7 +10975,7 @@ imported by:
 
 <div class="node">
   <a name="game_framework"></a>
-  <a target="code" href="///C:/2DGP_Project/object/game_framework.py" type="text/plain"><tt>game_framework</tt></a>
+  <a target="code" href="///C:/2DGP_Project/process/game_framework.py" type="text/plain"><tt>game_framework</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#time">time</a>
@@ -10941,6 +10986,8 @@ imported by:
     <a href="#Enemy">Enemy</a>
  &#8226;   <a href="#Items">Items</a>
  &#8226;   <a href="#Mario">Mario</a>
+ &#8226;   <a href="#Tiles">Tiles</a>
+ &#8226;   <a href="#clear_state">clear_state</a>
  &#8226;   <a href="#maingame.py">maingame.py</a>
  &#8226;   <a href="#play_state">play_state</a>
  &#8226;   <a href="#title_state">title_state</a>
@@ -10951,7 +10998,7 @@ imported by:
 
 <div class="node">
   <a name="game_world"></a>
-  <a target="code" href="///C:/2DGP_Project/object/game_world.py" type="text/plain"><tt>game_world</tt></a>
+  <a target="code" href="///C:/2DGP_Project/process/game_world.py" type="text/plain"><tt>game_world</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imported by:
     <a href="#Enemy">Enemy</a>
@@ -14078,7 +14125,7 @@ imported by:
   <a target="code" href="" type="text/plain"><tt>org</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
-    <a href="#pickle">pickle</a>
+    <a href="#copy">copy</a>
 
   </div>
 
@@ -14105,7 +14152,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#PyInstaller">PyInstaller</a>
+    <a href="#Items">Items</a>
+ &#8226;   <a href="#PyInstaller">PyInstaller</a>
  &#8226;   <a href="#PyInstaller.__main__">PyInstaller.__main__</a>
  &#8226;   <a href="#PyInstaller.archive.pyz_crypto">PyInstaller.archive.pyz_crypto</a>
  &#8226;   <a href="#PyInstaller.archive.writers">PyInstaller.archive.writers</a>
@@ -14150,6 +14198,7 @@ imported by:
  &#8226;   <a href="#bdb">bdb</a>
  &#8226;   <a href="#bz2">bz2</a>
  &#8226;   <a href="#cgi">cgi</a>
+ &#8226;   <a href="#clear_state">clear_state</a>
  &#8226;   <a href="#compileall">compileall</a>
  &#8226;   <a href="#concurrent.futures.process">concurrent.futures.process</a>
  &#8226;   <a href="#concurrent.futures.thread">concurrent.futures.thread</a>
@@ -14322,6 +14371,7 @@ imported by:
  &#8226;   <a href="#pkg_resources._vendor.pyparsing.core">pkg_resources._vendor.pyparsing.core</a>
  &#8226;   <a href="#pkgutil">pkgutil</a>
  &#8226;   <a href="#platform">platform</a>
+ &#8226;   <a href="#play_state">play_state</a>
  &#8226;   <a href="#plistlib">plistlib</a>
  &#8226;   <a href="#posixpath">posixpath</a>
  &#8226;   <a href="#pty">pty</a>
@@ -14604,14 +14654,14 @@ imported by:
   <a target="code" href="///C:/python/lib/pickle.py" type="text/plain"><tt>pickle</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#_compat_pickle">_compat_pickle</a>
+    <a href="#'org.python'">'org.python'</a>
+ &#8226;   <a href="#_compat_pickle">_compat_pickle</a>
  &#8226;   <a href="#_pickle">_pickle</a>
  &#8226;   <a href="#codecs">codecs</a>
  &#8226;   <a href="#copyreg">copyreg</a>
  &#8226;   <a href="#functools">functools</a>
  &#8226;   <a href="#io">io</a>
  &#8226;   <a href="#itertools">itertools</a>
- &#8226;   <a href="#org">org</a>
  &#8226;   <a href="#pprint">pprint</a>
  &#8226;   <a href="#re">re</a>
  &#8226;   <a href="#struct">struct</a>
@@ -14621,7 +14671,9 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#logging">logging</a>
+    <a href="#Timer">Timer</a>
+ &#8226;   <a href="#clear_state">clear_state</a>
+ &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#logging.handlers">logging.handlers</a>
  &#8226;   <a href="#multiprocessing.reduction">multiprocessing.reduction</a>
  &#8226;   <a href="#pip._vendor.cachecontrol.compat">pip._vendor.cachecontrol.compat</a>
@@ -14646,6 +14698,8 @@ imported by:
  &#8226;   <a href="#Items">Items</a>
  &#8226;   <a href="#Mario">Mario</a>
  &#8226;   <a href="#Tiles">Tiles</a>
+ &#8226;   <a href="#Timer">Timer</a>
+ &#8226;   <a href="#clear_state">clear_state</a>
  &#8226;   <a href="#maingame.py">maingame.py</a>
  &#8226;   <a href="#pico2d.pico2d">pico2d.pico2d</a>
  &#8226;   <a href="#play_state">play_state</a>
@@ -25220,7 +25274,7 @@ imported by:
 
 <div class="node">
   <a name="play_state"></a>
-  <a target="code" href="///C:/2DGP_Project/object/play_state.py" type="text/plain"><tt>play_state</tt></a>
+  <a target="code" href="///C:/2DGP_Project/process/play_state.py" type="text/plain"><tt>play_state</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#Background">Background</a>
@@ -25228,17 +25282,20 @@ imports:
  &#8226;   <a href="#Items">Items</a>
  &#8226;   <a href="#Mario">Mario</a>
  &#8226;   <a href="#Tiles">Tiles</a>
+ &#8226;   <a href="#Timer">Timer</a>
  &#8226;   <a href="#game_framework">game_framework</a>
  &#8226;   <a href="#game_world">game_world</a>
+ &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#pico2d">pico2d</a>
  &#8226;   <a href="#play_state">play_state</a>
  &#8226;   <a href="#server">server</a>
- &#8226;   <a href="#time">time</a>
+ &#8226;   <a href="#sys">sys</a>
 
   </div>
   <div class="import">
 imported by:
-    <a href="#maingame.py">maingame.py</a>
+    <a href="#clear_state">clear_state</a>
+ &#8226;   <a href="#maingame.py">maingame.py</a>
  &#8226;   <a href="#play_state">play_state</a>
  &#8226;   <a href="#title_state">title_state</a>
 
@@ -27260,7 +27317,7 @@ imported by:
 
 <div class="node">
   <a name="server"></a>
-  <a target="code" href="///C:/2DGP_Project/object/server.py" type="text/plain"><tt>server</tt></a>
+  <a target="code" href="///C:/2DGP_Project/process/server.py" type="text/plain"><tt>server</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imported by:
     <a href="#Background">Background</a>
@@ -27268,6 +27325,7 @@ imported by:
  &#8226;   <a href="#Items">Items</a>
  &#8226;   <a href="#Mario">Mario</a>
  &#8226;   <a href="#Tiles">Tiles</a>
+ &#8226;   <a href="#clear_state">clear_state</a>
  &#8226;   <a href="#play_state">play_state</a>
 
   </div>
@@ -31974,7 +32032,8 @@ imported by:
   <a name="sys"></a>
   <tt>sys</tt> <span class="moduletype"><i>(builtin module)</i></span>  <div class="import">
 imported by:
-    <a href="#PyInstaller">PyInstaller</a>
+    <a href="#Items">Items</a>
+ &#8226;   <a href="#PyInstaller">PyInstaller</a>
  &#8226;   <a href="#PyInstaller.archive.writers">PyInstaller.archive.writers</a>
  &#8226;   <a href="#PyInstaller.building.build_main">PyInstaller.building.build_main</a>
  &#8226;   <a href="#PyInstaller.building.makespec">PyInstaller.building.makespec</a>
@@ -32018,6 +32077,7 @@ imported by:
  &#8226;   <a href="#bdb">bdb</a>
  &#8226;   <a href="#calendar">calendar</a>
  &#8226;   <a href="#cgi">cgi</a>
+ &#8226;   <a href="#clear_state">clear_state</a>
  &#8226;   <a href="#cmd">cmd</a>
  &#8226;   <a href="#code">code</a>
  &#8226;   <a href="#codecs">codecs</a>
@@ -32214,6 +32274,7 @@ imported by:
  &#8226;   <a href="#pkg_resources.extern">pkg_resources.extern</a>
  &#8226;   <a href="#pkgutil">pkgutil</a>
  &#8226;   <a href="#platform">platform</a>
+ &#8226;   <a href="#play_state">play_state</a>
  &#8226;   <a href="#posixpath">posixpath</a>
  &#8226;   <a href="#pprint">pprint</a>
  &#8226;   <a href="#pty">pty</a>
@@ -32628,9 +32689,9 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#Mario">Mario</a>
- &#8226;   <a href="#PyInstaller.building.api">PyInstaller.building.api</a>
+    <a href="#PyInstaller.building.api">PyInstaller.building.api</a>
  &#8226;   <a href="#PyInstaller.lib.modulegraph.zipio">PyInstaller.lib.modulegraph.zipio</a>
+ &#8226;   <a href="#Timer">Timer</a>
  &#8226;   <a href="#_datetime">_datetime</a>
  &#8226;   <a href="#_strptime">_strptime</a>
  &#8226;   <a href="#asyncio.base_events">asyncio.base_events</a>
@@ -32680,7 +32741,6 @@ imported by:
  &#8226;   <a href="#pkg_resources">pkg_resources</a>
  &#8226;   <a href="#pkg_resources._vendor.jaraco.functools">pkg_resources._vendor.jaraco.functools</a>
  &#8226;   <a href="#pkg_resources._vendor.more_itertools.more">pkg_resources._vendor.more_itertools.more</a>
- &#8226;   <a href="#play_state">play_state</a>
  &#8226;   <a href="#pprint">pprint</a>
  &#8226;   <a href="#pydoc">pydoc</a>
  &#8226;   <a href="#queue">queue</a>
@@ -32721,17 +32781,19 @@ imported by:
 
 <div class="node">
   <a name="title_state"></a>
-  <a target="code" href="///C:/2DGP_Project/object/title_state.py" type="text/plain"><tt>title_state</tt></a>
+  <a target="code" href="///C:/2DGP_Project/process/title_state.py" type="text/plain"><tt>title_state</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#game_framework">game_framework</a>
+    <a href="#Background">Background</a>
+ &#8226;   <a href="#game_framework">game_framework</a>
  &#8226;   <a href="#pico2d">pico2d</a>
  &#8226;   <a href="#play_state">play_state</a>
 
   </div>
   <div class="import">
 imported by:
-    <a href="#maingame.py">maingame.py</a>
+    <a href="#clear_state">clear_state</a>
+ &#8226;   <a href="#maingame.py">maingame.py</a>
 
   </div>
 
